@@ -4,9 +4,9 @@ import { Card, Badge, Button, SectionHeader } from "../components/common";
 
 const Home = () => {
     return (
-        <div className="space-y-12">
+        <div className="space-y-10 ">
             {/* Hero section - full width with content centered */}
-            <section className="relative bg-gradient-to-br from-firefly to-san-juan py-16 px-4 mt-20 w-full">
+            <section className="relative bg-gradient-to-br from-firefly to-san-juan py-16 px-4 mt-10 w-full">
                 <div className="max-w-7xl mx-auto">
                     <div className="flex flex-col md:flex-row items-center justify-between">
                         <div className="md:w-1/2">
