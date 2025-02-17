@@ -13,6 +13,12 @@ const Navbar = () => {
         availableGPUs: 3,
     });
 
+    const [expanded, setExpanded] = useState({});
+
+    const toggleSubmenu = (itemName) => {
+        setExpanded((prev) => ({ ...prev, [itemName]: !prev[itemName] }));
+    };
+
     const location = useLocation();
 
     // Scroll effect
@@ -23,37 +29,6 @@ const Navbar = () => {
         window.addEventListener("scroll", handleScroll);
         return () => window.removeEventListener("scroll", handleScroll);
     }, []);
-
-    // GPU Status Fetching
-    /*have to uncomment and modify this section when API is ready
-  useEffect(() => {
-    const fetchGPUStatus = async () => {
-      try {
-        const response = await fetch('api/gpu-status');
-        const data = await response.json();
-        setGpuStatus({
-          isAvailable: data.availableGPUs > 0,
-          totalGPUs: data.totalGPUs,
-          availableGPUs: data.availableGPUs
-        });
-      } catch (error) {
-        console.error('Failed to fetch GPU status:', error);
-        // Fallback to default status on error
-        setGpuStatus({
-          isAvailable: true,
-          totalGPUs: 4,
-          availableGPUs: 3
-        });
-      }
-    };
-
-    // Initial fetch
-    fetchGPUStatus();
-
-
-    return () => clearInterval(pollInterval);
-  }, []);
-  */
 
     const navItems = [
         {
@@ -201,43 +176,73 @@ const Navbar = () => {
                         </svg>
                     </button>
                 </div>
+            </div>
 
-                {/* Mobile Menu */}
-                <div
-                    className={`lg:hidden transition-all duration-300 ease-in-out ${
-                        isMobileMenuOpen
-                            ? "opacity-100 translate-y-0"
-                            : "opacity-0 -translate-y-4 pointer-events-none"
-                    }`}
-                >
-                    <div
-                        className="px-2 pt-2 pb-3 space-y-1 bg-firefly/95 
-                                backdrop-blur-md rounded-lg mt-2 border border-iron/10"
-                    >
+            {/* Mobile Menu */}
+            {isMobileMenuOpen && (
+                <div className="lg:hidden">
+                    <div className="px-4 pt-2 pb-3 bg-white shadow-md border-t border-iron/10">
                         {navItems.map((item) => (
-                            <div key={item.name}>
-                                <Link
-                                    to={item.path}
-                                    className="block px-3 py-2 text-iron/90 
-                                    relative
-                                    hover:text-white 
-                                    after:absolute after:bottom-0 after:left-3 after:right-3
-                                    after:h-0.5 after:bg-casal after:transform after:scale-x-0 
-                                    after:origin-left hover:after:scale-x-100 
-                                    after:transition-transform after:duration-300
-                                    rounded-md text-sm font-medium transition-all duration-200"
-                                >
-                                    {item.name}
-                                </Link>
-                                {item.submenu && (
-                                    <div className="pl-4 space-y-1 border-l border-iron/10 ml-3">
+                            <div
+                                key={item.name}
+                                className="border-b border-iron/10"
+                            >
+                                <div className="flex justify-between items-center">
+                                    <Link
+                                        to={item.path}
+                                        onClick={() => {
+                                            // if no submenu, close the menu
+                                            if (!item.submenu)
+                                                setIsMobileMenuOpen(false);
+                                        }}
+                                        className="block px-3 py-4 text-lg text-iron hover:text-firefly transition-colors"
+                                    >
+                                        {item.name}
+                                    </Link>
+                                    {item.submenu && (
+                                        <button
+                                            onClick={() =>
+                                                toggleSubmenu(item.name)
+                                            }
+                                            className="p-3 focus:outline-none"
+                                        >
+                                            <motion.svg
+                                                className="h-4 w-4 text-iron"
+                                                initial={{ rotate: 0 }}
+                                                animate={{
+                                                    rotate: expanded[item.name]
+                                                        ? 180
+                                                        : 0,
+                                                }}
+                                                transition={{
+                                                    duration: 0.2,
+                                                    ease: "easeInOut",
+                                                }}
+                                                xmlns="http://www.w3.org/2000/svg"
+                                                fill="none"
+                                                viewBox="0 0 24 24"
+                                                stroke="currentColor"
+                                            >
+                                                <path
+                                                    strokeLinecap="round"
+                                                    strokeLinejoin="round"
+                                                    strokeWidth={2}
+                                                    d="M19 9l-7 7-7-7"
+                                                />
+                                            </motion.svg>
+                                        </button>
+                                    )}
+                                </div>
+                                {item.submenu && expanded[item.name] && (
+                                    <div className="pl-6">
                                         {item.submenu.map((subItem) => (
                                             <Link
                                                 key={subItem.name}
                                                 to={subItem.path}
-                                                className="block px-3 py-2 text-iron/80 
-                                                       hover:text-gray500 hover:bg-san-juan/20 
-                                                       rounded-md text-sm transition-colors duration-200"
+                                                onClick={() =>
+                                                    setIsMobileMenuOpen(false)
+                                                }
+                                                className="block px-3 py-2 text-base text-iron hover:text-firefly transition-colors"
                                             >
                                                 {subItem.name}
                                             </Link>
@@ -248,7 +253,7 @@ const Navbar = () => {
                         ))}
                     </div>
                 </div>
-            </div>
+            )}
         </nav>
     );
 };
