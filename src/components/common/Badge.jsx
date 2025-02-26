@@ -1,14 +1,16 @@
+import React from "react";
+
 export const Badge = ({ children, type = "default" }) => {
-    const colorMap = {
-        default: "bg-casal/10 text-casal",
-        success: "bg-green-100 text-green-700",
-        warning: "bg-yellow-100 text-yellow-700",
-        error: "bg-red-100 text-red-700",
+    const types = {
+        default: "bg-casal text-white",
+        success: "bg-green-100 text-green-800",
+        warning: "bg-yellow-100 text-yellow-800",
+        error: "bg-red-100 text-red-800",
     };
 
     return (
         <span
-            className={`inline-flex px-3 py-1 rounded-full text-sm font-medium ${colorMap[type]}`}
+            className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${types[type]}`}
         >
             {children}
         </span>

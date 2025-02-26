@@ -1,12 +1,136 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 import { dummyData } from "../utils/dummyData";
 import { Card, Badge, Button, SectionHeader } from "../components/common";
+import { api } from "../utils/api";
 
 const Home = () => {
+    const [labStatus, setLabStatus] = useState({
+        isOpen: true,
+        message: "Lab is currently open",
+    });
+
+    const [gpuStatus, setGpuStatus] = useState({
+        isAvailable: true,
+        totalGPUs: 4,
+        availableGPUs: 3,
+    });
+
+    const [news, setNews] = useState([]);
+    const [loadingNews, setLoadingNews] = useState(true);
+
+    useEffect(() => {
+        // Fetch lab status
+        const fetchLabStatus = async () => {
+            try {
+                const response = await fetch(
+                    "https://backend-website-api.vercel.app/update_lab",
+                    {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({}),
+                    }
+                );
+
+                if (response.ok) {
+                    const data = await response.json();
+                    if (data && typeof data.isOpen !== "undefined") {
+                        setLabStatus(data);
+                    }
+                }
+            } catch (error) {
+                console.error("Error fetching lab status:", error);
+                // Keep current state - don't update on error
+            }
+        };
+
+        // Fetch GPU status
+        const fetchGpuStatus = async () => {
+            try {
+                const response = await fetch(
+                    "https://backend-website-api.vercel.app/update_gpu",
+                    {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({}),
+                    }
+                );
+
+                if (response.ok) {
+                    const data = await response.json();
+                    setGpuStatus({
+                        isAvailable: data.availableGPUs > 0,
+                        availableGPUs: data.availableGPUs || 0,
+                        totalGPUs: data.totalGPUs || 4,
+                    });
+                }
+            } catch (error) {
+                console.error("Error fetching GPU status:", error);
+                // Keep current state - don't update on error
+            }
+        };
+
+        fetchLabStatus();
+        fetchGpuStatus();
+
+        // Refresh status every 5 minutes
+        const interval = setInterval(() => {
+            fetchLabStatus();
+            fetchGpuStatus();
+        }, 5 * 60 * 1000);
+
+        return () => clearInterval(interval);
+    }, []);
+
+    useEffect(() => {
+        const fetchNews = async () => {
+            try {
+                const data = await api.getItems("news");
+                setNews(data.length > 0 ? data : dummyData.news);
+                setLoadingNews(false);
+            } catch (error) {
+                console.error("Error fetching news:", error);
+                setLoadingNews(false);
+                // Use dummy data as fallback
+                setNews(dummyData.news);
+            }
+        };
+
+        fetchNews();
+    }, []);
+
     return (
-        <div className="space-y-10 ">
+        <div className="space-y-10">
+            {/* Status Bar */}
+            <div className="sticky top-20 z-40 bg-white shadow-md py-2 px-4 flex justify-between items-center">
+                <div className="flex items-center">
+                    <div
+                        className={`h-3 w-3 rounded-full ${
+                            labStatus.isOpen ? "bg-green-500" : "bg-red-500"
+                        } mr-2`}
+                    ></div>
+                    <span className="text-sm font-medium text-nevada">
+                        {labStatus.message}
+                    </span>
+                </div>
+                <div className="flex items-center">
+                    <div
+                        className={`h-3 w-3 rounded-full ${
+                            gpuStatus.isAvailable
+                                ? "bg-green-500"
+                                : "bg-red-500"
+                        } mr-2`}
+                    ></div>
+                    <span className="text-sm font-medium text-nevada">
+                        {gpuStatus.isAvailable
+                            ? `${gpuStatus.availableGPUs}/${gpuStatus.totalGPUs} GPUs Available`
+                            : "GPUs Busy"}
+                    </span>
+                </div>
+            </div>
+
             {/* Hero section - full width with content centered */}
-            <section className="relative bg-gradient-to-br from-firefly to-san-juan py-16 px-4 mt-10 w-full">
+            <section className="relative bg-gradient-to-br from-firefly to-san-juan py-16 px-4 w-full">
                 <div className="max-w-7xl mx-auto">
                     <div className="flex flex-col md:flex-row items-center justify-between">
                         <div className="md:w-1/2">
@@ -24,13 +148,13 @@ const Home = () => {
                                     variant="outline"
                                     className="font-semibold"
                                 >
-                                    Explore Projects
+                                    <Link to="/projects">Explore Projects</Link>
                                 </Button>
                                 <Button
                                     variant="outline1"
-                                    className="font-semibold "
+                                    className="font-semibold"
                                 >
-                                    Join Our Team
+                                    <Link to="/contact">Join Our Team</Link>
                                 </Button>
                             </div>
                         </div>
@@ -111,7 +235,7 @@ const Home = () => {
                     <div className="grid md:grid-cols-2 gap-8">
                         {dummyData.news.map((item) => (
                             <Card
-                                key={item.id}
+                                key={item.id || item._id}
                                 className="group hover:shadow-xl transition-all duration-200"
                             >
                                 <div className="flex items-start justify-between">
@@ -120,7 +244,7 @@ const Home = () => {
                                             <span className="text-sm text-casal font-medium">
                                                 {item.date}
                                             </span>
-                                            <Badge>{item.type}</Badge>
+                                            <Badge>{item.source}</Badge>
                                         </div>
                                         <h4 className="text-xl font-semibold text-firefly mb-2 group-hover:text-casal transition-colors duration-200">
                                             {item.title}
@@ -133,6 +257,16 @@ const Home = () => {
                                         <p className="text-nevada leading-relaxed">
                                             {item.description}
                                         </p>
+                                        {item.link && (
+                                            <a
+                                                href={item.link}
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                className="mt-3 inline-block text-casal hover:text-gothic"
+                                            >
+                                                Read more →
+                                            </a>
+                                        )}
                                     </div>
                                 </div>
                             </Card>

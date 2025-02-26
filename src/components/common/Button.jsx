@@ -1,26 +1,32 @@
+
+import React from "react";
+
 export const Button = ({
     children,
+    type = "button",
     variant = "primary",
     className = "",
-    ...props
+    onClick,
+    disabled = false,
 }) => {
     const variants = {
-        primary:
-            "bg-firefly hover:bg-san-juan text-iron border border-transparent",
-        secondary:
-            "bg-casal hover:bg-gothic text-white border border-transparent",
+        primary: "bg-firefly text-white hover:bg-san-juan",
+        secondary: "bg-casal text-white hover:bg-gothic",
         outline:
-            "bg-transparent border-2 border-iron text-iron hover:bg-iron/10",
+            "bg-white text-firefly border border-firefly hover:bg-firefly/5",
         outline1:
-            "bg-gray-400 border-2 border-gray-500 text-iron hover:bg-iron/10",
+            "bg-transparent text-iron border border-iron hover:bg-white/10",
+        danger: "bg-red-600 text-white hover:bg-red-700",
     };
 
     return (
         <button
-            className={`px-8 py-3 rounded-lg font-medium inline-flex items-center 
-                     transition-all duration-200 shadow-md hover:shadow-lg 
-                     transform hover:-translate-y-0.5 ${variants[variant]} ${className}`}
-            {...props}
+            type={type}
+            onClick={onClick}
+            disabled={disabled}
+            className={`px-6 py-2 rounded-md transition-colors duration-200 font-medium ${
+                variants[variant]
+            } ${className} ${disabled ? "opacity-50 cursor-not-allowed" : ""}`}
         >
             {children}
         </button>

@@ -32,12 +32,16 @@ const Navbar = () => {
 
     const navItems = [
         {
+            name: "Home",
+            path: "/",
+        },
+        {
             name: "Research",
             path: "/research",
             submenu: [
-                { name: "Areas", path: "/research/areas" },
                 { name: "Publications", path: "/publications" },
                 { name: "Projects", path: "/projects" },
+                { name: "Datasets", path: "/datasets" },
             ],
         },
         {
@@ -45,12 +49,13 @@ const Navbar = () => {
             path: "/people",
             submenu: [
                 { name: "Faculty", path: "/people/faculty" },
+                { name: "PhD Scholars", path: "/people/phd-scholars" },
+                { name: "Honors Students", path: "/people/honors-students" },
                 { name: "Students", path: "/people/students" },
                 { name: "Alumni", path: "/people/alumni" },
             ],
         },
         { name: "Resources", path: "/resources" },
-        { name: "News", path: "/news" },
         { name: "Contact", path: "/contact" },
     ];
 
