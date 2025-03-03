@@ -1,0 +1,115 @@
+// src/pages/admin/AdminAlumni.jsx
+import React from "react";
+import { AdminCollectionPage } from "../../components/admin/AdminCollectionPage";
+
+const AdminAlumni = () => {
+    const initialFormData = {
+        name: "",
+        batch: "",
+        contributions: "",
+        current_position: "",
+        image: "",
+        linkedin: "",
+        Current_Location: "", // Fixed: Capital C to match the schema
+    };
+
+    const columns = [
+        { key: "name", label: "Name" },
+        { key: "batch", label: "Batch" },
+        { key: "current_position", label: "Current Position" },
+        {
+            key: "image",
+            label: "Image",
+            render: (item) =>
+                item.image ? (
+                    <img
+                        src={item.image}
+                        alt={item.name}
+                        className="w-12 h-12 object-cover rounded-full"
+                    />
+                ) : (
+                    "No image"
+                ),
+        },
+    ];
+
+    const formFields = [
+        { id: "name", label: "Full Name", required: true },
+        { id: "batch", label: "Graduation Batch", required: true },
+        {
+            id: "contributions",
+            label: "Key Contributions to the Lab",
+            textarea: true,
+            rows: 3,
+            required: true,
+        },
+        {
+            id: "current_position",
+            label: "Current Job Title and Company",
+            required: true,
+        },
+        { id: "image", label: "Profile Picture", type: "file" },
+        { id: "linkedin", label: "LinkedIn Profile" },
+        {
+            id: "Current_Location", // Capital C to match the schema
+            label: "Google Maps Embed Link",
+        },
+    ];
+
+    // Custom handler for delete operation to ensure we use the correct doc_id field
+    const handleDelete = async (
+        api,
+        collection,
+        item,
+        setSuccess,
+        setError,
+        refreshItems
+    ) => {
+        if (!window.confirm(`Are you sure you want to delete this alumni?`)) {
+            return;
+        }
+
+        try {
+            // Use the doc_id field from the API response
+            const docId = item.doc_id;
+
+            if (!docId) {
+                throw new Error("No document ID found for deletion");
+            }
+
+            console.log(
+                `Deleting alumni with ID: ${docId} from collection: ${collection}`
+            );
+
+            await api.deleteItem(collection, docId);
+            setSuccess(`Alumni deleted successfully`);
+
+            // Refresh the list
+            refreshItems();
+        } catch (error) {
+            console.error(`Error deleting ${collection}:`, error);
+            setError(
+                `Failed to delete alumni: ${error.message || "Unknown error"}`
+            );
+            return false;
+        }
+        return true;
+    };
+
+    return (
+        <AdminCollectionPage
+            title="Alumni"
+            collection="alumni"
+            columns={columns}
+            formFields={formFields}
+            initialFormData={initialFormData}
+            buttonColor="bg-gray-300 hover:bg-gray-400"
+            buttonTextColor="text-black"
+            apiMethod="add_item"
+            onCustomDelete={handleDelete} // Custom delete handler
+            idField="doc_id" // Specify the correct field name for ID
+        />
+    );
+};
+
+export default AdminAlumni;
