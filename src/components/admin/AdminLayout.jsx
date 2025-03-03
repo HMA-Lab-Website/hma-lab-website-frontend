@@ -127,7 +127,7 @@ const AdminLayout = ({ children }) => {
                                                     ${
                                                         expandedMenu ===
                                                         item.name
-                                                            ? "bg-casal/10 text-casal font-medium"
+                                                            ? "bg-gray-300/10 text-casal font-medium"
                                                             : "text-nevada hover:bg-iron/10 hover:text-firefly"
                                                     }`}
                                         >
@@ -182,7 +182,7 @@ const AdminLayout = ({ children }) => {
                                                                     ${
                                                                         location.pathname ===
                                                                         subItem.path
-                                                                            ? "bg-san-juan/40 text-white"
+                                                                            ? "bg-san-juan/40 text-black"
                                                                             : "hover:bg-san-juan/20 text-iron/80"
                                                                     }`}
                                                                 >
@@ -223,7 +223,7 @@ const AdminLayout = ({ children }) => {
                         ))}
                     </ul>
                 </nav>
-                <div className="absolute bottom-0 w-full p-4">
+                <div className="absolute bottom-0 p-4">
                     <button
                         onClick={handleLogout}
                         className={`flex items-center p-3 rounded-md hover:bg-red-50 transition-colors 

@@ -11,10 +11,20 @@ const Faculty = () => {
     useEffect(() => {
         const fetchFaculty = async () => {
             try {
-                const data = await api.getItems("faculty");
-                setFaculty(data);
+                // According to the schema, we should use "people" collection and filter for faculty
+                const data = await api.getItems("people");
+
+                // Filter people with role "Faculty" if coming from a unified collection
+                const facultyMembers = data.filter(
+                    (member) =>
+                        member.role &&
+                        member.role.toLowerCase().includes("faculty")
+                );
+
+                setFaculty(facultyMembers.length > 0 ? facultyMembers : data);
                 setLoading(false);
             } catch (err) {
+                console.error("Error fetching faculty data:", err);
                 setError("Failed to load faculty data");
                 setLoading(false);
             }
@@ -23,65 +33,116 @@ const Faculty = () => {
         fetchFaculty();
     }, []);
 
-    if (loading)
-        return <div className="text-center py-20">Loading faculty data...</div>;
-    if (error)
-        return <div className="text-center py-20 text-red-600">{error}</div>;
+    if (loading) {
+        return (
+            <div className="flex justify-center items-center h-96">
+                <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-firefly"></div>
+            </div>
+        );
+    }
+
+    if (error) {
+        return (
+            <div className="text-center py-20 text-red-600">
+                <p className="text-xl">{error}</p>
+                <button
+                    onClick={() => window.location.reload()}
+                    className="mt-4 px-4 py-2 bg-firefly text-black rounded-md hover:bg-opacity-90 transition-colors"
+                >
+                    Try Again
+                </button>
+            </div>
+        );
+    }
+
+    if (faculty.length === 0) {
+        return (
+            <div className="max-w-7xl mx-auto px-4 py-12 mt-16">
+                <SectionHeader
+                    title="Faculty"
+                    subtitle="Meet our esteemed faculty members"
+                />
+                <p className="text-center text-lg text-nevada">
+                    No faculty members found.
+                </p>
+            </div>
+        );
+    }
 
     return (
         <div className="max-w-7xl mx-auto px-4 py-12 mt-16">
             <SectionHeader
                 title="Faculty"
-                subtitle="Our distinguished faculty leading cutting-edge research"
+                subtitle="Meet our esteemed faculty members"
             />
-
-            <div className="space-y-8">
-                {faculty.map((person, index) => (
+            <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+                {faculty.map((member, index) => (
                     <Card
                         key={index}
                         className="overflow-hidden hover:shadow-xl transition-shadow duration-200"
                     >
-                        <div className="flex flex-col md:flex-row">
-                            {person.image && (
-                                <div className="md:w-1/4">
+                        <div className="flex flex-col">
+                            {member.image ? (
+                                <div className="w-full">
                                     <img
-                                        src={person.image}
-                                        alt={person.name}
-                                        className="w-full h-64 md:h-full object-cover"
+                                        src={member.image}
+                                        alt={member.name}
+                                        className="w-full h-64 object-cover object-center"
                                     />
                                 </div>
-                            )}
-                            <div className="p-6 md:w-3/4">
-                                <h3 className="text-2xl font-semibold text-firefly mb-2">
-                                    {person.name}
-                                </h3>
-                                <div className="text-lg text-casal mb-4">
-                                    {person.role}
-                                </div>
-                                <p className="text-nevada mb-6 leading-relaxed">
-                                    {person.bio}
-                                </p>
-                                <div className="flex items-center space-x-4">
-                                    <a
-                                        href={`mailto:${person.email}`}
-                                        className="text-casal hover:text-gothic transition-colors"
+                            ) : (
+                                <div className="w-full h-64 bg-gray-200 flex items-center justify-center">
+                                    <svg
+                                        className="h-20 w-20 text-gray-400"
+                                        fill="none"
+                                        viewBox="0 0 24 24"
+                                        stroke="currentColor"
                                     >
-                                        {person.email}
-                                    </a>
-                                    {person.linkedin && (
+                                        <path
+                                            strokeLinecap="round"
+                                            strokeLinejoin="round"
+                                            strokeWidth="2"
+                                            d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
+                                        />
+                                    </svg>
+                                </div>
+                            )}
+                            <div className="p-6">
+                                <h3 className="text-xl font-semibold text-firefly mb-2">
+                                    {member.name}
+                                </h3>
+                                <p className="text-sm text-casal mb-3">
+                                    {member.role}
+                                </p>
+                                {member.email && (
+                                    <p className="text-nevada mb-2">
+                                        <span className="font-medium">
+                                            Email:
+                                        </span>{" "}
+                                        {member.email}
+                                    </p>
+                                )}
+                                {member.bio && (
+                                    <p className="text-nevada mb-4">
+                                        {member.bio}
+                                    </p>
+                                )}
+                                <div className="flex space-x-4">
+                                    {member.linkedin && (
                                         <a
-                                            href={person.linkedin}
+                                            href={member.linkedin}
+                                            className="text-blue-500 hover:underline flex items-center"
                                             target="_blank"
                                             rel="noopener noreferrer"
-                                            className="text-iron hover:text-gray500 transition-colors"
                                         >
                                             <svg
-                                                className="h-5 w-5"
+                                                className="h-4 w-4 mr-1"
                                                 fill="currentColor"
                                                 viewBox="0 0 24 24"
                                             >
-                                                <path d="M12 0c-6.627 0-12 5.373-12 12s5.373 12 12 12 12-5.373 12-12-5.373-12-12-12zm-2 16h-2v-6h2v6zm-1-6.891c-.607 0-1.1-.496-1.1-1.109 0-.612.492-1.109 1.1-1.109s1.1.497 1.1 1.109c0 .613-.493 1.109-1.1 1.109zm8 6.891h-1.998v-2.861c0-1.881-2.002-1.722-2.002 0v2.861h-2v-6h2v1.093c.872-1.616 4-1.736 4 1.548v3.359z" />
+                                                <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z" />
                                             </svg>
+                                            LinkedIn
                                         </a>
                                     )}
                                 </div>

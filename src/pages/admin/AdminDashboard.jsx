@@ -10,10 +10,7 @@ const AdminDashboard = () => {
         projects: 0,
         datasets: 0,
         resources: 0,
-        faculty: 0,
-        phdScholars: 0,
-        honorsStudents: 0,
-        students: 0,
+        people: 0,
         alumni: 0,
         news: 0,
     });
@@ -22,8 +19,7 @@ const AdminDashboard = () => {
     const [labStatus, setLabStatus] = useState({ isOpen: true });
     const [gpuStatus, setGpuStatus] = useState({
         isAvailable: true,
-        availableGPUs: 0,
-        totalGPUs: 0,
+        gpuDocId: null,
     });
 
     useEffect(() => {
@@ -37,10 +33,7 @@ const AdminDashboard = () => {
                     "projects",
                     "datasets",
                     "resources",
-                    "faculty",
-                    "phd_scholars",
-                    "honors_students",
-                    "students",
+                    "people",
                     "alumni",
                     "news",
                 ];
@@ -50,22 +43,22 @@ const AdminDashboard = () => {
                 // Fetch all collections in parallel
                 await Promise.all(
                     collections.map(async (collection) => {
-                        const data = await api.getItems(collection);
-                        const key =
-                            collection === "phd_scholars"
-                                ? "phdScholars"
-                                : collection === "honors_students"
-                                ? "honorsStudents"
-                                : collection;
-                        stats[key] = Array.isArray(data) ? data.length : 0;
+                        try {
+                            const data = await api.getItems(collection);
+                            stats[collection] = Array.isArray(data)
+                                ? data.length
+                                : 0;
+                        } catch (e) {
+                            console.error(`Error fetching ${collection}:`, e);
+                            stats[collection] = 0;
+                        }
                     })
                 );
 
                 setStats(stats);
 
-                // For lab and GPU status, use defaults if API fails
+                // Fetch lab status
                 try {
-                    // Since there's no clear GET method, use empty POST request as per documentation
                     const response = await fetch(
                         "https://backend-website-api.vercel.app/update_lab",
                         {
@@ -83,42 +76,36 @@ const AdminDashboard = () => {
                     }
                 } catch (err) {
                     console.error("Error fetching lab status:", err);
-                    // Fallback to default if API fails
                     setLabStatus({
                         isOpen: true,
                         message: "Lab is currently open (default)",
                     });
                 }
 
+                // Fetch GPU status from indication collection
                 try {
-                    // Since there's no clear GET method, use empty POST request as per documentation
-                    const response = await fetch(
-                        "https://backend-website-api.vercel.app/update_gpu",
-                        {
-                            method: "POST",
-                            headers: {
-                                "Content-Type": "application/json",
-                            },
-                            body: JSON.stringify({}), // Empty body to just get current state
-                        }
-                    );
+                    const indicationData = await api.getItems("indication");
+                    if (indicationData && indicationData.length > 0) {
+                        // Find the GPU indication document
+                        const gpuItem = indicationData.find(
+                            (item) => "gpu" in item
+                        );
 
-                    if (response.ok) {
-                        const data = await response.json();
-                        // Ensure proper structure with fallbacks if fields are missing
-                        setGpuStatus({
-                            isAvailable: data.availableGPUs > 0,
-                            availableGPUs: data.availableGPUs || 0,
-                            totalGPUs: data.totalGPUs || 4, // Default if not provided by API
-                        });
+                        if (gpuItem) {
+                            setGpuStatus({
+                                isAvailable: Boolean(gpuItem.gpu),
+                                gpuDocId: gpuItem.doc_id,
+                            });
+                        }
                     }
                 } catch (err) {
-                    console.error("Error fetching GPU status:", err);
-                    // Fallback to default if API fails
+                    console.error(
+                        "Error fetching GPU status from indication:",
+                        err
+                    );
                     setGpuStatus({
                         isAvailable: true,
-                        availableGPUs: 3,
-                        totalGPUs: 4,
+                        gpuDocId: null,
                     });
                 }
 
@@ -132,41 +119,22 @@ const AdminDashboard = () => {
         fetchStats();
     }, []);
 
-    const handleUpdateGpuStatus = async (newAvailableGPUs) => {
+    const handleUpdateGpuStatus = async (isAvailable) => {
         try {
-            // Preserve the total GPUs from current state
-            const totalGPUs = gpuStatus.totalGPUs || 4;
+            // Use the api.addItem function to update indication collection
+            const response = await api.addItem({
+                collection: "indication",
+                gpu: isAvailable,
+                doc_id: gpuStatus.gpuDocId, // Include doc_id if we have it
+            });
 
-            const updatedStatus = {
-                availableGPUs: newAvailableGPUs,
-                totalGPUs: totalGPUs,
-            };
+            // Update local state
+            setGpuStatus({
+                ...gpuStatus,
+                isAvailable: isAvailable,
+            });
 
-            const response = await fetch(
-                "https://backend-website-api.vercel.app/update_gpu",
-                {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                    body: JSON.stringify(updatedStatus),
-                }
-            );
-
-            if (response.ok) {
-                const data = await response.json();
-
-                // Update with response data but ensure structure
-                setGpuStatus({
-                    isAvailable: newAvailableGPUs > 0,
-                    availableGPUs: newAvailableGPUs,
-                    totalGPUs: totalGPUs,
-                });
-
-                console.log("GPU status updated successfully");
-            } else {
-                throw new Error("Failed to update GPU status");
-            }
+            console.log("GPU status updated successfully");
         } catch (error) {
             console.error("Error updating GPU status:", error);
             alert("Failed to update GPU status. Please try again.");
@@ -209,61 +177,43 @@ const AdminDashboard = () => {
     const statsCards = [
         {
             title: "Publications",
-            count: stats.publications,
+            count: stats.publications || 0,
             icon: "ri-book-open-line",
             link: "/admin/publications",
         },
         {
             title: "Projects",
-            count: stats.projects,
+            count: stats.projects || 0,
             icon: "ri-folder-line",
             link: "/admin/projects",
         },
         {
             title: "Datasets",
-            count: stats.datasets,
+            count: stats.datasets || 0,
             icon: "ri-database-2-line",
             link: "/admin/datasets",
         },
         {
             title: "Resources",
-            count: stats.resources,
+            count: stats.resources || 0,
             icon: "ri-file-list-line",
             link: "/admin/resources",
         },
         {
-            title: "Faculty",
-            count: stats.faculty,
+            title: "People",
+            count: stats.people || 0,
             icon: "ri-user-star-line",
-            link: "/admin/faculty",
-        },
-        {
-            title: "PhD Scholars",
-            count: stats.phdScholars,
-            icon: "ri-graduation-cap-line",
-            link: "/admin/phd-scholars",
-        },
-        {
-            title: "Honors Students",
-            count: stats.honorsStudents,
-            icon: "ri-award-line",
-            link: "/admin/honors-students",
-        },
-        {
-            title: "Students",
-            count: stats.students,
-            icon: "ri-user-line",
-            link: "/admin/students",
+            link: "/admin/people",
         },
         {
             title: "Alumni",
-            count: stats.alumni,
+            count: stats.alumni || 0,
             icon: "ri-user-3-line",
             link: "/admin/alumni",
         },
         {
             title: "News",
-            count: stats.news,
+            count: stats.news || 0,
             icon: "ri-newspaper-line",
             link: "/admin/news",
         },
@@ -282,78 +232,7 @@ const AdminDashboard = () => {
             <h1 className="text-2xl font-semibold text-firefly">Dashboard</h1>
 
             {/* Status indicators */}
-            <div className="flex flex-col sm:flex-row gap-6">
-                <div className="bg-white p-6 rounded-lg shadow-md flex-1">
-                    <div className="flex items-center justify-between">
-                        <h3 className="text-lg font-medium text-firefly">
-                            Lab Status
-                        </h3>
-                        <div
-                            className={`h-3 w-3 rounded-full ${
-                                labStatus.isOpen ? "bg-green-500" : "bg-red-500"
-                            }`}
-                        ></div>
-                    </div>
-                    <p className="mt-2 text-nevada">
-                        {labStatus.message || "Status not available"}
-                    </p>
-                    <button
-                        onClick={handleUpdateLabStatus}
-                        className="mt-4 px-3 py-1 bg-casal text-white rounded-md hover:bg-san-juan transition-colors text-sm"
-                    >
-                        {labStatus.isOpen ? "Mark as Closed" : "Mark as Open"}
-                    </button>
-                </div>
-
-                <div className="bg-white p-6 rounded-lg shadow-md flex-1">
-                    <div className="flex items-center justify-between">
-                        <h3 className="text-lg font-medium text-firefly">
-                            GPU Status
-                        </h3>
-                        <div
-                            className={`h-3 w-3 rounded-full ${
-                                gpuStatus.isAvailable
-                                    ? "bg-green-500"
-                                    : "bg-red-500"
-                            }`}
-                        ></div>
-                    </div>
-                    <p className="mt-2 text-nevada">
-                        {gpuStatus.isAvailable
-                            ? `${gpuStatus.availableGPUs}/${gpuStatus.totalGPUs} GPUs Available`
-                            : "All GPUs are busy"}
-                    </p>
-                    <div className="mt-4 flex gap-3">
-                        <button
-                            onClick={() =>
-                                handleUpdateGpuStatus(
-                                    Math.min(
-                                        gpuStatus.availableGPUs + 1,
-                                        gpuStatus.totalGPUs
-                                    )
-                                )
-                            }
-                            className="px-3 py-1 bg-casal text-white rounded-md hover:bg-san-juan transition-colors text-sm"
-                            disabled={
-                                gpuStatus.availableGPUs >= gpuStatus.totalGPUs
-                            }
-                        >
-                            Release GPU
-                        </button>
-                        <button
-                            onClick={() =>
-                                handleUpdateGpuStatus(
-                                    Math.max(gpuStatus.availableGPUs - 1, 0)
-                                )
-                            }
-                            className="px-3 py-1 bg-casal text-white rounded-md hover:bg-san-juan transition-colors text-sm"
-                            disabled={gpuStatus.availableGPUs <= 0}
-                        >
-                            Allocate GPU
-                        </button>
-                    </div>
-                </div>
-            </div>
+            <div className="flex flex-col sm:flex-row gap-6"></div>
 
             {/* Stats Cards */}
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">

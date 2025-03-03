@@ -29,7 +29,8 @@ const Contact = () => {
         });
 
         // This is a placeholder for actual form submission
-        // Replace with actual API call when backend is ready
+        // Replace with actual API call when backend is ready -- when ???
+
         setTimeout(() => {
             setStatus({
                 submitted: true,

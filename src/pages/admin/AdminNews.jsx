@@ -51,6 +51,48 @@ const AdminNews = () => {
         { id: "image", label: "Featured Image", type: "file" },
     ];
 
+    // Custom delete handler for news
+    const handleDelete = async (
+        api,
+        collection,
+        item,
+        setSuccess,
+        setError,
+        refreshItems
+    ) => {
+        if (
+            !window.confirm(`Are you sure you want to delete this news item?`)
+        ) {
+            return;
+        }
+
+        try {
+            const docId = item.doc_id;
+
+            if (!docId) {
+                throw new Error("No document ID found for deletion");
+            }
+
+            console.log(
+                `Deleting news item with ID: ${docId} from collection: ${collection}`
+            );
+
+            await api.deleteItem(collection, docId);
+            setSuccess(`News item deleted successfully`);
+
+            refreshItems();
+        } catch (error) {
+            console.error(`Error deleting ${collection}:`, error);
+            setError(
+                `Failed to delete news item: ${
+                    error.message || "Unknown error"
+                }`
+            );
+            return false;
+        }
+        return true;
+    };
+
     return (
         <AdminCollectionPage
             title="News Item"
@@ -58,6 +100,11 @@ const AdminNews = () => {
             columns={columns}
             formFields={formFields}
             initialFormData={initialFormData}
+            buttonColor="bg-gray-300 hover:bg-gray-400"
+            buttonTextColor="text-black"
+            apiMethod="add_item"
+            onCustomDelete={handleDelete}
+            idField="doc_id"
         />
     );
 };

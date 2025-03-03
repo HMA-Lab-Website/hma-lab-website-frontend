@@ -5,7 +5,7 @@ import { AdminCollectionPage } from "../../components/admin/AdminCollectionPage"
 const AdminFaculty = () => {
     const initialFormData = {
         name: "",
-        role: "",
+        role: "Faculty", // Default role set to "Faculty" to ensure proper filtering
         email: "",
         image: "",
         bio: "",
@@ -34,7 +34,7 @@ const AdminFaculty = () => {
 
     const formFields = [
         { id: "name", label: "Full Name", required: true },
-        { id: "role", label: "Role", required: true },
+        { id: "role", label: "Role", required: true, value: "Faculty" },
         { id: "email", label: "Email Address", required: true, type: "email" },
         {
             id: "bio",
@@ -47,13 +47,62 @@ const AdminFaculty = () => {
         { id: "image", label: "Profile Picture", type: "file" },
     ];
 
+    // Custom delete handler for faculty
+    const handleDelete = async (
+        api,
+        collection,
+        item,
+        setSuccess,
+        setError,
+        refreshItems
+    ) => {
+        if (
+            !window.confirm(
+                `Are you sure you want to delete this faculty member?`
+            )
+        ) {
+            return;
+        }
+
+        try {
+            const docId = item.doc_id;
+
+            if (!docId) {
+                throw new Error("No document ID found for deletion");
+            }
+
+            console.log(
+                `Deleting faculty with ID: ${docId} from collection: ${collection}`
+            );
+
+            await api.deleteItem(collection, docId);
+            setSuccess(`Faculty member deleted successfully`);
+
+            refreshItems();
+        } catch (error) {
+            console.error(`Error deleting ${collection}:`, error);
+            setError(
+                `Failed to delete faculty member: ${
+                    error.message || "Unknown error"
+                }`
+            );
+            return false;
+        }
+        return true;
+    };
+
     return (
         <AdminCollectionPage
             title="Faculty"
-            collection="faculty"
+            collection="people" // Changed from "faculty" to "people" to match the schema
             columns={columns}
             formFields={formFields}
             initialFormData={initialFormData}
+            buttonColor="bg-gray-300 hover:bg-gray-400"
+            buttonTextColor="text-black"
+            apiMethod="add_item"
+            onCustomDelete={handleDelete}
+            idField="doc_id"
         />
     );
 };

@@ -123,4 +123,37 @@ export const api = {
             throw error;
         }
     },
+
+    // Get GPU indication status
+    getGpuIndication: async () => {
+        try {
+            console.log("Fetching GPU indication status");
+            const response = await axios.get(
+                `${BASE_URL}/get_items/indication`
+            );
+            return response.data;
+        } catch (error) {
+            console.error("Error fetching GPU indication status:", error);
+            return [];
+        }
+    },
+
+    // Add or update GPU indication
+    updateGpuIndication: async (indicationData) => {
+        try {
+            console.log("Updating GPU indication data");
+            const requestData = {
+                ...indicationData,
+                collection: "indication",
+            };
+            const response = await axios.post(
+                `${BASE_URL}/add_item`,
+                requestData
+            );
+            return response.data;
+        } catch (error) {
+            console.error("Error updating GPU indication:", error);
+            throw error;
+        }
+    },
 };

@@ -13,6 +13,8 @@ import HonorsStudents from "./pages/people/HonorsStudents";
 import Students from "./pages/people/Students";
 import Alumni from "./pages/people/Alumni";
 import Contact from "./pages/Contact";
+import Research from "./pages/Research";
+import News from "./pages/News";
 
 // Admin Routes
 import AdminLogin from "./pages/admin/AdminLogin";
@@ -48,6 +50,14 @@ function App() {
                     element={
                         <Layout>
                             <Publications />
+                        </Layout>
+                    }
+                />
+                <Route
+                    path="/research"
+                    element={
+                        <Layout>
+                            <Research />
                         </Layout>
                     }
                 />
@@ -128,6 +138,14 @@ function App() {
                     element={
                         <Layout>
                             <Contact />
+                        </Layout>
+                    }
+                />
+                <Route
+                    path="/news"
+                    element={
+                        <Layout>
+                            <News />
                         </Layout>
                     }
                 />

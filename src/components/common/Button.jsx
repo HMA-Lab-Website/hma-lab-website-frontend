@@ -1,4 +1,3 @@
-
 import React from "react";
 
 export const Button = ({
@@ -10,13 +9,13 @@ export const Button = ({
     disabled = false,
 }) => {
     const variants = {
-        primary: "bg-firefly text-white hover:bg-san-juan",
-        secondary: "bg-casal text-white hover:bg-gothic",
+        primary: "bg-firefly text-black hover:bg-san-juan",
+        secondary: "bg-gray-300 text-black hover:bg-gothic",
         outline:
             "bg-white text-firefly border border-firefly hover:bg-firefly/5",
         outline1:
             "bg-transparent text-iron border border-iron hover:bg-white/10",
-        danger: "bg-red-600 text-white hover:bg-red-700",
+        danger: "bg-red-600 text-black hover:bg-red-700",
     };
 
     return (

@@ -3,18 +3,13 @@ import React from "react";
 import { AdminCollectionPage } from "../../components/admin/AdminCollectionPage";
 
 const AdminStudents = () => {
-    // Set collection name as 'students' to match backend collection
-    const collectionName = "students";
-
     const initialFormData = {
         name: "",
-        role: "Student",
+        role: "Student", // Default role set to "Student" for filtering
         email: "",
         image: "",
         bio: "",
         linkedin: "",
-        // Include collection name in initial form data
-        collection: collectionName,
     };
 
     const columns = [
@@ -38,7 +33,7 @@ const AdminStudents = () => {
 
     const formFields = [
         { id: "name", label: "Full Name", required: true },
-        { id: "role", label: "Role", required: true },
+        { id: "role", label: "Role", required: true, value: "Student" },
         { id: "email", label: "Email Address", required: true, type: "email" },
         {
             id: "bio",
@@ -51,13 +46,56 @@ const AdminStudents = () => {
         { id: "image", label: "Profile Picture", type: "file" },
     ];
 
+    // Custom delete handler for students
+    const handleDelete = async (
+        api,
+        collection,
+        item,
+        setSuccess,
+        setError,
+        refreshItems
+    ) => {
+        if (!window.confirm(`Are you sure you want to delete this student?`)) {
+            return;
+        }
+
+        try {
+            const docId = item.doc_id;
+
+            if (!docId) {
+                throw new Error("No document ID found for deletion");
+            }
+
+            console.log(
+                `Deleting student with ID: ${docId} from collection: ${collection}`
+            );
+
+            await api.deleteItem(collection, docId);
+            setSuccess(`Student deleted successfully`);
+
+            refreshItems();
+        } catch (error) {
+            console.error(`Error deleting ${collection}:`, error);
+            setError(
+                `Failed to delete student: ${error.message || "Unknown error"}`
+            );
+            return false;
+        }
+        return true;
+    };
+
     return (
         <AdminCollectionPage
             title="Student"
-            collection={collectionName}
+            collection="people" // Changed from "students" to "people" to match the schema
             columns={columns}
             formFields={formFields}
             initialFormData={initialFormData}
+            buttonColor="bg-gray-300 hover:bg-gray-400"
+            buttonTextColor="text-black"
+            apiMethod="add_item"
+            onCustomDelete={handleDelete}
+            idField="doc_id"
         />
     );
 };

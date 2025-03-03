@@ -36,14 +36,7 @@ const AdminResources = () => {
         },
     ];
 
-    const categories = [
-        "Tutorial",
-        "Tool",
-        "Document",
-        "Video",
-        "Dataset",
-        "Other",
-    ];
+    const categories = ["Tutorial", "Tool", "Document", "Video", "Other"];
 
     const formFields = [
         { id: "title", label: "Resource Title", required: true },
@@ -114,6 +107,44 @@ const AdminResources = () => {
         );
     };
 
+    // Custom delete handler for resources
+    const handleDelete = async (
+        api,
+        collection,
+        item,
+        setSuccess,
+        setError,
+        refreshItems
+    ) => {
+        if (!window.confirm(`Are you sure you want to delete this resource?`)) {
+            return;
+        }
+
+        try {
+            const docId = item.doc_id;
+
+            if (!docId) {
+                throw new Error("No document ID found for deletion");
+            }
+
+            console.log(
+                `Deleting resource with ID: ${docId} from collection: ${collection}`
+            );
+
+            await api.deleteItem(collection, docId);
+            setSuccess(`Resource deleted successfully`);
+
+            refreshItems();
+        } catch (error) {
+            console.error(`Error deleting ${collection}:`, error);
+            setError(
+                `Failed to delete resource: ${error.message || "Unknown error"}`
+            );
+            return false;
+        }
+        return true;
+    };
+
     return (
         <AdminCollectionPage
             title="Resource"
@@ -122,6 +153,11 @@ const AdminResources = () => {
             formFields={formFields}
             initialFormData={initialFormData}
             renderField={renderField}
+            buttonColor="bg-gray-300 hover:bg-gray-400"
+            buttonTextColor="text-black"
+            apiMethod="add_item"
+            onCustomDelete={handleDelete}
+            idField="doc_id"
         />
     );
 };

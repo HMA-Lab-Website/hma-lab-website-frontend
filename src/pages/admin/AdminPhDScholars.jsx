@@ -46,13 +46,60 @@ const AdminPhDScholars = () => {
         { id: "image", label: "Profile Picture", type: "file" },
     ];
 
+    // Custom delete handler for PhD scholars
+    const handleDelete = async (
+        api,
+        collection,
+        item,
+        setSuccess,
+        setError,
+        refreshItems
+    ) => {
+        if (
+            !window.confirm(`Are you sure you want to delete this PhD scholar?`)
+        ) {
+            return;
+        }
+
+        try {
+            const docId = item.doc_id;
+
+            if (!docId) {
+                throw new Error("No document ID found for deletion");
+            }
+
+            console.log(
+                `Deleting PhD scholar with ID: ${docId} from collection: ${collection}`
+            );
+
+            await api.deleteItem(collection, docId);
+            setSuccess(`PhD scholar deleted successfully`);
+
+            refreshItems();
+        } catch (error) {
+            console.error(`Error deleting ${collection}:`, error);
+            setError(
+                `Failed to delete PhD scholar: ${
+                    error.message || "Unknown error"
+                }`
+            );
+            return false;
+        }
+        return true;
+    };
+
     return (
         <AdminCollectionPage
             title="PhD Scholar"
-            collection="phd_scholars"
+            collection="people" // Changed from "phd_scholars" to "people"
             columns={columns}
             formFields={formFields}
             initialFormData={initialFormData}
+            buttonColor="bg-gray-300 hover:bg-gray-400"
+            buttonTextColor="text-black"
+            apiMethod="add_item"
+            onCustomDelete={handleDelete}
+            idField="doc_id"
         />
     );
 };

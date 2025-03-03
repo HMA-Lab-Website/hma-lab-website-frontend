@@ -12,15 +12,20 @@ export const AdminCollectionPage = ({
     formFields,
     initialFormData,
     renderField,
+    buttonColor = "bg-gray-300 hover:bg-gothic",
+    buttonTextColor = "text-black", // Fixed: removed "5" from text5-white
+    apiMethod = "addItem",
+    onCustomDelete = null,
+    idField = "id",
 }) => {
-    const { isAuthenticated } = useAuth();
+    const { isAuthenticated } = useAuth(); // Fixed: removed 0 from isAuthenticated0
     const navigate = useNavigate();
 
     useEffect(() => {
         if (!isAuthenticated) {
             navigate("/admin/login");
         }
-    }, [isAuthenticated, navigate]);
+    }, [isAuthenticated, navigate]); // Fixed: removed the 0 character
 
     const [items, setItems] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -32,6 +37,7 @@ export const AdminCollectionPage = ({
     const [imageFile, setImageFile] = useState(null);
     const [uploadingImage, setUploadingImage] = useState(false);
     const [submitting, setSubmitting] = useState(false);
+    const [deleting, setDeleting] = useState(false);
 
     useEffect(() => {
         fetchItems();
@@ -40,10 +46,11 @@ export const AdminCollectionPage = ({
     const fetchItems = async () => {
         try {
             const data = await api.getItems(collection);
-            // Add an id field using the firebase document ID stored in _id
+            // Store items with their original _id for proper deletion
             const itemsWithIds = data.map((item) => ({
                 ...item,
-                id: item._id || item.id,
+                // Ensure we store the document ID in a consistent property
+                id: item._id || item.id || item.doc_id, // Added doc_id as a fallback
             }));
             setItems(itemsWithIds);
             setLoading(false);
@@ -100,27 +107,42 @@ export const AdminCollectionPage = ({
         setSubmitting(true);
 
         try {
+            // Handle image upload first if there's a file
+            let imageUrl = null;
+            if (imageFile) {
+                imageUrl = await handleUploadImage();
+                if (!imageUrl) {
+                    setSubmitting(false);
+                    return; // Stop if image upload failed
+                }
+            }
+
             // Always explicitly set collection in the submission data
             let dataToSubmit = {
                 ...formData,
-                collection: collection, // Make sure collection is included in every request
+                collection: collection,
             };
 
-            console.log("Submitting data:", dataToSubmit); // Debug log
+            // Add the image URL to the submission if we uploaded one
+            if (imageUrl) {
+                dataToSubmit.image = imageUrl;
+            }
+
+            console.log("Submitting data:", dataToSubmit);
 
             if (isEditing && currentItemId) {
                 // For updating, we need to include the document ID
                 await api.addItem({
                     ...dataToSubmit,
-                    _id: currentItemId,
-                    collection: collection, // Make sure collection is included in update request
+                    doc_id: currentItemId, // Use doc_id for consistency with API
+                    collection: collection,
                 });
                 setSuccess(`${title} updated successfully`);
             } else {
                 // For adding new items
                 await api.addItem({
                     ...dataToSubmit,
-                    collection: collection, // Make sure collection is included in add request
+                    collection: collection,
                 });
                 setSuccess(`${title} added successfully`);
             }
@@ -158,12 +180,24 @@ export const AdminCollectionPage = ({
             ...item,
         });
         setIsEditing(true);
-        setCurrentItemId(item.id || item._id);
+        setCurrentItemId(item.doc_id || item._id || item.id); // Prioritize doc_id
         setError("");
         setSuccess("");
     };
 
     const handleDelete = async (item) => {
+        if (onCustomDelete) {
+            // Use custom delete handler if provided
+            return onCustomDelete(
+                api,
+                collection,
+                item,
+                setSuccess,
+                setError,
+                fetchItems
+            );
+        }
+
         if (
             !window.confirm(
                 `Are you sure you want to delete this ${title.toLowerCase()}?`
@@ -173,13 +207,34 @@ export const AdminCollectionPage = ({
         }
 
         try {
-            await api.deleteItem(collection, item.id || item._id);
+            setDeleting(true);
+            setError("");
+
+            // Get the document ID using the specified idField or fallbacks
+            const docId = item.doc_id || item[idField] || item._id || item.id;
+
+            if (!docId) {
+                throw new Error("No document ID found for deletion");
+            }
+
+            console.log(
+                `Deleting ${title} with ID: ${docId} from collection: ${collection}`
+            );
+
+            await api.deleteItem(collection, docId);
             setSuccess(`${title} deleted successfully`);
+
             // Refresh the list
             fetchItems();
         } catch (error) {
             console.error(`Error deleting ${collection}:`, error);
-            setError(`Failed to delete ${title.toLowerCase()}`);
+            setError(
+                `Failed to delete ${title.toLowerCase()}: ${
+                    error.message || "Unknown error"
+                }`
+            );
+        } finally {
+            setDeleting(false);
         }
     };
 
@@ -195,7 +250,7 @@ export const AdminCollectionPage = ({
     if (loading) {
         return (
             <div className="flex justify-center items-center h-64">
-                <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-casal"></div>
+                <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-firefly"></div>
             </div>
         );
     }
@@ -253,7 +308,7 @@ export const AdminCollectionPage = ({
                         <Button
                             type="submit"
                             variant="secondary"
-                            className="bg-casal hover:bg-gothic text-white font-medium px-6 py-2"
+                            className={`${buttonColor} ${buttonTextColor} font-medium px-6 py-2`}
                             disabled={uploadingImage || submitting}
                         >
                             {uploadingImage
@@ -269,7 +324,12 @@ export const AdminCollectionPage = ({
             </div>
 
             <h2 className="text-xl font-semibold text-firefly mb-4">
-                {title} List
+                {title} List{" "}
+                {deleting && (
+                    <span className="text-sm text-red-500 ml-2">
+                        (Deleting...)
+                    </span>
+                )}
             </h2>
 
             <div className="bg-white rounded-lg shadow-md p-6">

@@ -10,7 +10,7 @@ const AdminAlumni = () => {
         current_position: "",
         image: "",
         linkedin: "",
-        current_location: "",
+        Current_Location: "", // Fixed: Capital C to match the schema
     };
 
     const columns = [
@@ -50,8 +50,51 @@ const AdminAlumni = () => {
         },
         { id: "image", label: "Profile Picture", type: "file" },
         { id: "linkedin", label: "LinkedIn Profile" },
-        { id: "current_location", label: "Google Maps Embed Link" },
+        {
+            id: "Current_Location", // Capital C to match the schema
+            label: "Google Maps Embed Link",
+        },
     ];
+
+    // Custom handler for delete operation to ensure we use the correct doc_id field
+    const handleDelete = async (
+        api,
+        collection,
+        item,
+        setSuccess,
+        setError,
+        refreshItems
+    ) => {
+        if (!window.confirm(`Are you sure you want to delete this alumni?`)) {
+            return;
+        }
+
+        try {
+            // Use the doc_id field from the API response
+            const docId = item.doc_id;
+
+            if (!docId) {
+                throw new Error("No document ID found for deletion");
+            }
+
+            console.log(
+                `Deleting alumni with ID: ${docId} from collection: ${collection}`
+            );
+
+            await api.deleteItem(collection, docId);
+            setSuccess(`Alumni deleted successfully`);
+
+            // Refresh the list
+            refreshItems();
+        } catch (error) {
+            console.error(`Error deleting ${collection}:`, error);
+            setError(
+                `Failed to delete alumni: ${error.message || "Unknown error"}`
+            );
+            return false;
+        }
+        return true;
+    };
 
     return (
         <AdminCollectionPage
@@ -60,6 +103,11 @@ const AdminAlumni = () => {
             columns={columns}
             formFields={formFields}
             initialFormData={initialFormData}
+            buttonColor="bg-gray-300 hover:bg-gray-400"
+            buttonTextColor="text-black"
+            apiMethod="add_item"
+            onCustomDelete={handleDelete} // Custom delete handler
+            idField="doc_id" // Specify the correct field name for ID
         />
     );
 };
