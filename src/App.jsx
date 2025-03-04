@@ -30,6 +30,7 @@ import AdminHonorsStudents from "./pages/admin/AdminHonorsStudents";
 import AdminStudents from "./pages/admin/AdminStudents";
 import AdminAlumni from "./pages/admin/AdminAlumni";
 import AdminNews from "./pages/admin/AdminNews";
+import Current from "./pages/people/Current";
 import AdminSettings from "./pages/admin/AdminSettings";
 
 function App() {
@@ -146,6 +147,14 @@ function App() {
                     element={
                         <Layout>
                             <News />
+                        </Layout>
+                    }
+                />
+                <Route
+                    path="/people/current"
+                    element={
+                        <Layout>
+                            <Current />
                         </Layout>
                     }
                 />
