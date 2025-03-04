@@ -97,10 +97,7 @@ const Navbar = () => {
             name: "People",
             path: "/people",
             submenu: [
-                { name: "Faculty", path: "/people/faculty" },
-                { name: "PhD Scholars", path: "/people/phd-scholars" },
-                { name: "Honors Students", path: "/people/honors-students" },
-                { name: "Students", path: "/people/students" },
+                { name: "Current", path: "/people/current" },
                 { name: "Alumni", path: "/people/alumni" },
             ],
         },
@@ -199,9 +196,9 @@ const Navbar = () => {
                         ))}
 
                         {/* Status Indicators */}
-                        <div className="flex items-center space-x-3">
+                        <div className="flex flex-col space-y-0">
                             {/* Lab Status */}
-                            <div className="flex items-center bg-san-juan/30 px-3 py-2 backdrop-blur-sm rounded-md">
+                            <div className="flex items-center bg-san-juan/30 px-3 py-1 backdrop-blur-sm rounded-md w-full">
                                 <div
                                     className={`h-2 w-2 rounded-full ${
                                         labStatus.isOpen
@@ -217,7 +214,7 @@ const Navbar = () => {
                             </div>
 
                             {/* GPU Status */}
-                            <div className="flex items-center bg-san-juan/30 px-3 py-2 backdrop-blur-sm rounded-md">
+                            <div className="flex items-center bg-san-juan/30 px-3 py-1 backdrop-blur-sm rounded-md w-full">
                                 <div
                                     className={`h-2 w-2 rounded-full ${
                                         gpuStatus.isAvailable
