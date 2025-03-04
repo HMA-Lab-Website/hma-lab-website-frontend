@@ -171,7 +171,7 @@ const Home = () => {
                             transition={{ duration: 0.8 }}
                         >
                             <h1 className="text-6xl font-bold mb-6 text-iron leading-tight">
-                                Human Machine{" "}
+                                Human Movement{" "}
                                 <span className="text-gray-700">
                                     Analysis Lab
                                 </span>
@@ -211,7 +211,7 @@ const Home = () => {
                             <div className="mt-4 bg-white/10 backdrop-blur-sm p-4 rounded-lg">
                                 <p className="text-iron text-sm">
                                     Our lab focuses on developing innovative AI
-                                    solutions that enhance human-machine
+                                    solutions that enhance human-movement
                                     interaction and analysis capabilities.
                                 </p>
                             </div>
