@@ -94,6 +94,10 @@ const Navbar = () => {
             ],
         },
         {
+            name: "Careers",
+            path: "/careers",
+        },
+        {
             name: "People",
             path: "/people",
             submenu: [

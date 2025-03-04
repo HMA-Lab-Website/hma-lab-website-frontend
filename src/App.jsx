@@ -15,6 +15,7 @@ import Alumni from "./pages/people/Alumni";
 import Contact from "./pages/Contact";
 import Research from "./pages/Research";
 import News from "./pages/News";
+import Careers from "./pages/Careers";
 
 // Admin Routes
 import AdminLogin from "./pages/admin/AdminLogin";
@@ -51,6 +52,14 @@ function App() {
                     element={
                         <Layout>
                             <Publications />
+                        </Layout>
+                    }
+                />
+                <Route
+                    path="/careers"
+                    element={
+                        <Layout>
+                            <Careers />
                         </Layout>
                     }
                 />
