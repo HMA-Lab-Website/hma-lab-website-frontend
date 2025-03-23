@@ -29,8 +29,7 @@ const Contact = () => {
         });
 
         // This is a placeholder for actual form submission
-        // Replace with actual API call when backend is ready -- when ???
-
+        // Replace with actual API call when backend is ready
         setTimeout(() => {
             setStatus({
                 submitted: true,
@@ -55,7 +54,7 @@ const Contact = () => {
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
                 {/* Contact Information */}
-                <div className="bg-white rounded-lg shadow-md p-8 order-2 md:order-1">
+                <div className="bg-white rounded-lg shadow-md p-8 order-2 md:order-1 h-full">
                     <h3 className="text-2xl font-semibold text-firefly mb-6">
                         Lab Location
                     </h3>
@@ -114,7 +113,7 @@ const Contact = () => {
                         <div className="flex space-x-4">
                             <a
                                 href="#"
-                                className="bg-iron/10 p-3 rounded-full text-nevada hover:text-casal transition-colors"
+                                className="bg-iron/10 p-3 rounded-full text-nevada hover:bg-casal/10 hover:text-casal transition-all duration-200"
                                 aria-label="LinkedIn"
                             >
                                 <svg
@@ -127,7 +126,7 @@ const Contact = () => {
                             </a>
                             <a
                                 href="#"
-                                className="bg-iron/10 p-3 rounded-full text-nevada hover:text-casal transition-colors"
+                                className="bg-iron/10 p-3 rounded-full text-nevada hover:bg-casal/10 hover:text-casal transition-all duration-200"
                                 aria-label="Twitter"
                             >
                                 <svg
@@ -140,7 +139,7 @@ const Contact = () => {
                             </a>
                             <a
                                 href="#"
-                                className="bg-iron/10 p-3 rounded-full text-nevada hover:text-casal transition-colors"
+                                className="bg-iron/10 p-3 rounded-full text-nevada hover:bg-casal/10 hover:text-casal transition-all duration-200"
                                 aria-label="GitHub"
                             >
                                 <svg
@@ -165,7 +164,7 @@ const Contact = () => {
                         <div>
                             <label
                                 htmlFor="name"
-                                className="block text-sm font-medium text-nevada mb-1"
+                                className="block text-sm font-medium text-firefly mb-1"
                             >
                                 Name
                             </label>
@@ -183,7 +182,7 @@ const Contact = () => {
                         <div>
                             <label
                                 htmlFor="email"
-                                className="block text-sm font-medium text-nevada mb-1"
+                                className="block text-sm font-medium text-firefly mb-1"
                             >
                                 Email
                             </label>
@@ -201,7 +200,7 @@ const Contact = () => {
                         <div>
                             <label
                                 htmlFor="subject"
-                                className="block text-sm font-medium text-nevada mb-1"
+                                className="block text-sm font-medium text-firefly mb-1"
                             >
                                 Subject
                             </label>
@@ -219,7 +218,7 @@ const Contact = () => {
                         <div>
                             <label
                                 htmlFor="message"
-                                className="block text-sm font-medium text-nevada mb-1"
+                                className="block text-sm font-medium text-firefly mb-1"
                             >
                                 Message
                             </label>
@@ -252,8 +251,8 @@ const Contact = () => {
                         <div
                             className={`mt-4 p-4 rounded-lg ${
                                 status.success
-                                    ? "bg-green-100 text-green-800"
-                                    : "bg-yellow-100 text-yellow-800"
+                                    ? "bg-green-100 border border-green-200 text-green-800"
+                                    : "bg-yellow-100 border border-yellow-200 text-yellow-800"
                             }`}
                         >
                             {status.message}
@@ -269,7 +268,7 @@ const Contact = () => {
                 </h3>
                 <div className="aspect-w-16 aspect-h-9">
                     <iframe
-                        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3890.089057397898!2d79.9711089748946!3d13.52584268790472!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3a4d73ee76be5b27%3A0x9c469a7814b36424!2sIndian%20Institute%20of%20Information%20Technology%20Sri%20City!5e0!3m2!1sen!2sin!4v1710845580906!5m2!1sen!2sin"
+                        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3878.67455117794!2d80.02406811130813!3d13.555545286761253!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3a4d773f1e0f8721%3A0xadb0842ffc2719e4!2sIndian%20Institute%20of%20Information%20Technology%2C%20Sri%20City%2C%20Chittoor!5e0!3m2!1sen!2sin!4v1742730626672!5m2!1sen!2sin"
                         width="100%"
                         height="450"
                         style={{ border: 0 }}

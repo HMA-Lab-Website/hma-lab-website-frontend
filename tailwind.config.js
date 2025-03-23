@@ -1,6 +1,7 @@
+// tailwind.config.js
 /** @type {import('tailwindcss').Config} */
 export default {
-    content: ["./index.html", "./src/**/*.{js,jsx}"],
+    content: ["./index.html", "./src/**/*.{js,jsx,ts,tsx}"],
     theme: {
         extend: {
             colors: {
@@ -15,6 +16,9 @@ export default {
                 background: "#f5f7f8",
             },
         },
+    },
+    corePlugins: {
+        lineClamp: true, // Enable the built-in line-clamp
     },
     plugins: [],
 };

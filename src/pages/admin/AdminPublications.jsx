@@ -139,8 +139,8 @@ const AdminPublications = () => {
             columns={columns}
             formFields={formFields}
             initialFormData={initialFormData}
-            buttonColor="bg-gray-300 hover:bg-gray-400"
-            buttonTextColor="text-black"
+            buttonColor="bg-casal hover:bg-gothic"
+            buttonTextColor="text-white"
             apiMethod="add_item"
             onCustomDelete={handleDelete}
             idField="doc_id"

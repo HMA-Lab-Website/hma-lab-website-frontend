@@ -59,8 +59,8 @@ export const AdminCollectionPage = ({
     formFields,
     initialFormData,
     renderField,
-    buttonColor = "bg-gray-300 hover:bg-gothic",
-    buttonTextColor = "text-black", // Fixed: removed "5" from text5-white
+    buttonColor = "bg-casal hover:bg-gothic",
+    buttonTextColor = "text-white",
     apiMethod = "addItem",
     onCustomDelete = null,
     idField = "id",
@@ -297,7 +297,7 @@ export const AdminCollectionPage = ({
     if (loading) {
         return (
             <div className="flex justify-center items-center h-64">
-                <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-firefly"></div>
+                <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-casal"></div>
             </div>
         );
     }
@@ -324,7 +324,20 @@ export const AdminCollectionPage = ({
                 <form onSubmit={handleSubmit} className="space-y-4">
                     {formFields.map((field) =>
                         renderField ? (
-                            renderField(field, formData, handleInputChange)
+                            <FormField
+                                key={field.id}
+                                id={field.id}
+                                label={field.label}
+                                type={field.type || "text"}
+                                value={formData[field.id] || ""}
+                                onChange={handleInputChange}
+                                placeholder={field.placeholder || ""}
+                                required={field.required}
+                                textarea={field.textarea}
+                                rows={field.rows}
+                                error=""
+                                maxLength={field.maxLength}
+                            />
                         ) : (
                             <FormField
                                 key={field.id}
@@ -338,6 +351,7 @@ export const AdminCollectionPage = ({
                                 textarea={field.textarea}
                                 rows={field.rows}
                                 error=""
+                                maxLength={field.maxLength} // Make sure this prop is passed
                             />
                         )
                     )}
@@ -355,7 +369,7 @@ export const AdminCollectionPage = ({
                         <Button
                             type="submit"
                             variant="secondary"
-                            className={`${buttonColor} ${buttonTextColor} font-medium px-6 py-2`}
+                            className="font-medium px-6 py-2"
                             disabled={uploadingImage || submitting}
                         >
                             {uploadingImage

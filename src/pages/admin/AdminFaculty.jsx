@@ -33,8 +33,14 @@ const AdminFaculty = () => {
     ];
 
     const formFields = [
-        { id: "name", label: "Full Name", required: true },
-        { id: "role", label: "Role", required: true, value: "Faculty" },
+        { id: "name", label: "Full Name", required: true, maxLength: 100 },
+        {
+            id: "role",
+            label: "Role",
+            required: true,
+            value: "Faculty",
+            maxLength: 50,
+        },
         { id: "email", label: "Email Address", required: true, type: "email" },
         {
             id: "bio",
@@ -42,8 +48,9 @@ const AdminFaculty = () => {
             textarea: true,
             rows: 5,
             required: true,
+            maxLength: 250,
         },
-        { id: "linkedin", label: "LinkedIn Profile URL" },
+        { id: "linkedin", label: "LinkedIn Profile URL", maxLength: 250 },
         { id: "image", label: "Profile Picture", type: "file" },
     ];
 
@@ -98,8 +105,8 @@ const AdminFaculty = () => {
             columns={columns}
             formFields={formFields}
             initialFormData={initialFormData}
-            buttonColor="bg-gray-300 hover:bg-gray-400"
-            buttonTextColor="text-black"
+            buttonColor="bg-casal hover:bg-gothic"
+            buttonTextColor="text-white"
             apiMethod="add_item"
             onCustomDelete={handleDelete}
             idField="doc_id"

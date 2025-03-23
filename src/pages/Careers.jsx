@@ -1,6 +1,6 @@
 // src/pages/Careers.jsx
 import React from "react";
-import { SectionHeader, Card, Button } from "../components/common";
+import { SectionHeader, Card, Button, Badge } from "../components/common";
 import { Link } from "react-router-dom";
 
 const Careers = () => {
@@ -42,29 +42,35 @@ const Careers = () => {
                 {jobOpenings.map((job) => (
                     <Card
                         key={job.id}
-                        className="hover:shadow-xl transition-all duration-300 border border-iron/10"
+                        className="hover:shadow-xl transition-all duration-300 border border-iron/10 group"
                     >
                         <div className="p-6">
                             <div className="flex flex-wrap justify-between items-start mb-4">
-                                <h3 className="text-2xl font-semibold text-firefly">
+                                <h3 className="text-2xl font-semibold text-firefly group-hover:text-casal transition-colors">
                                     {job.title}
                                 </h3>
                                 <div className="flex gap-3 items-center mt-1 md:mt-0">
-                                    <span className="text-sm text-nevada bg-iron/20 px-3 py-1 rounded-full">
+                                    <Badge
+                                        type={
+                                            job.type === "Academic"
+                                                ? "primary"
+                                                : "default"
+                                        }
+                                    >
                                         {job.type}
-                                    </span>
+                                    </Badge>
                                     <span className="text-sm text-nevada">
                                         Posted: {job.date}
                                     </span>
                                 </div>
                             </div>
-                            <p className="text-nevada mb-6">
+                            <p className="text-nevada mb-6 line-clamp-3">
                                 {job.description}
                             </p>
                             <div className="flex justify-end">
                                 <Link to="/contact">
                                     <Button
-                                        variant="outline"
+                                        variant="secondary"
                                         className="font-medium"
                                     >
                                         Apply Now

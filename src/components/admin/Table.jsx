@@ -54,13 +54,13 @@ export const Table = ({ columns, data, onEdit, onDelete }) => {
                                 <td className="px-4 py-4 text-right text-sm font-medium whitespace-nowrap">
                                     <button
                                         onClick={() => onEdit(item)}
-                                        className="text-casal hover:text-gothic mr-2 bg-blue-50 hover:bg-blue-100 px-2 py-1 rounded text-sm"
+                                        className="text-casal hover:text-white mr-2 bg-casal/10 hover:bg-casal px-2 py-1 rounded text-sm transition-colors duration-200"
                                     >
                                         Edit
                                     </button>
                                     <button
                                         onClick={() => onDelete(item)}
-                                        className="text-red-600 hover:text-red-700 bg-red-50 hover:bg-red-100 px-2 py-1 rounded text-sm"
+                                        className="text-red-600 hover:text-white bg-red-50 hover:bg-red-600 px-2 py-1 rounded text-sm transition-colors duration-200"
                                     >
                                         Delete
                                     </button>

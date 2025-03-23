@@ -1,11 +1,11 @@
-// src/pages/admin/AdminPhDScholars.jsx
+// src/pages/admin/AdminPHD Scholar.jsx
 import React from "react";
 import { AdminCollectionPage } from "../../components/admin/AdminCollectionPage";
 
 const AdminPhDScholars = () => {
     const initialFormData = {
         name: "",
-        role: "PhD Scholar",
+        role: "PHD Scholar", // Default role set to "PHD Scholar" to ensure proper filtering
         email: "",
         image: "",
         bio: "",
@@ -14,6 +14,7 @@ const AdminPhDScholars = () => {
 
     const columns = [
         { key: "name", label: "Name" },
+        { key: "role", label: "Role" },
         { key: "email", label: "Email" },
         {
             key: "image",
@@ -32,8 +33,14 @@ const AdminPhDScholars = () => {
     ];
 
     const formFields = [
-        { id: "name", label: "Full Name", required: true },
-        { id: "role", label: "Role", required: true, value: "PhD Scholar" },
+        { id: "name", label: "Full Name", required: true, maxLength: 100 },
+        {
+            id: "role",
+            label: "Role",
+            required: true,
+            value: "Phd Scholar",
+            maxLength: 50,
+        },
         { id: "email", label: "Email Address", required: true, type: "email" },
         {
             id: "bio",
@@ -41,12 +48,13 @@ const AdminPhDScholars = () => {
             textarea: true,
             rows: 5,
             required: true,
+            maxLength: 250,
         },
-        { id: "linkedin", label: "LinkedIn Profile URL" },
+        { id: "linkedin", label: "LinkedIn Profile URL", maxLength: 250 },
         { id: "image", label: "Profile Picture", type: "file" },
     ];
 
-    // Custom delete handler for PhD scholars
+    // Custom delete handler for PHD Scholar
     const handleDelete = async (
         api,
         collection,
@@ -56,7 +64,9 @@ const AdminPhDScholars = () => {
         refreshItems
     ) => {
         if (
-            !window.confirm(`Are you sure you want to delete this PhD scholar?`)
+            !window.confirm(
+                `Are you sure you want to delete this PHD Scholar member?`
+            )
         ) {
             return;
         }
@@ -69,17 +79,17 @@ const AdminPhDScholars = () => {
             }
 
             console.log(
-                `Deleting PhD scholar with ID: ${docId} from collection: ${collection}`
+                `Deleting PHD Scholar with ID: ${docId} from collection: ${collection}`
             );
 
             await api.deleteItem(collection, docId);
-            setSuccess(`PhD scholar deleted successfully`);
+            setSuccess(`PHD Scholar member deleted successfully`);
 
             refreshItems();
         } catch (error) {
             console.error(`Error deleting ${collection}:`, error);
             setError(
-                `Failed to delete PhD scholar: ${
+                `Failed to delete phd member: ${
                     error.message || "Unknown error"
                 }`
             );
@@ -90,13 +100,13 @@ const AdminPhDScholars = () => {
 
     return (
         <AdminCollectionPage
-            title="PhD Scholar"
-            collection="people" // Changed from "phd_scholars" to "people"
+            title="PHD Scholar"
+            collection="people" // Changed from "PHD Scholar" to "people" to match the schema
             columns={columns}
             formFields={formFields}
             initialFormData={initialFormData}
-            buttonColor="bg-gray-300 hover:bg-gray-400"
-            buttonTextColor="text-black"
+            buttonColor="bg-casal hover:bg-gothic"
+            buttonTextColor="text-white"
             apiMethod="add_item"
             onCustomDelete={handleDelete}
             idField="doc_id"

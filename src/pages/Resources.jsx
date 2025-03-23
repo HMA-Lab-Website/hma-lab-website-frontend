@@ -1,6 +1,6 @@
 // src/pages/Resources.jsx
 import React, { useState, useEffect } from "react";
-import { SectionHeader, Card } from "../components/common";
+import { SectionHeader, Card, Badge } from "../components/common";
 import { api } from "../utils/api";
 
 const Resources = () => {
@@ -12,6 +12,17 @@ const Resources = () => {
     const [selectedCategory, setSelectedCategory] = useState("All");
     const [categories, setCategories] = useState(["All"]);
     const [resourceType, setResourceType] = useState("All"); // New filter for resource/dataset
+
+    // Add this state to track expanded descriptions
+    const [expandedItems, setExpandedItems] = useState({});
+
+    // Add this function to toggle expanded state
+    const toggleExpanded = (itemId) => {
+        setExpandedItems((prev) => ({
+            ...prev,
+            [itemId]: !prev[itemId],
+        }));
+    };
 
     useEffect(() => {
         const fetchResourcesAndDatasets = async () => {
@@ -91,11 +102,14 @@ const Resources = () => {
 
     if (error)
         return (
-            <div className="text-center py-20 text-red-600">
-                <p className="text-xl">{error}</p>
+            <div className="text-center py-20 text-red-600 bg-red-50 rounded-lg border border-red-100 max-w-3xl mx-auto p-6">
+                <p className="text-xl font-medium mb-4">{error}</p>
+                <p className="text-nevada mb-6">
+                    Unable to load resources at this time.
+                </p>
                 <button
                     onClick={() => window.location.reload()}
-                    className="mt-4 px-4 py-2 bg-gray-300 text-black rounded-md hover:bg-gothic transition-colors"
+                    className="mt-4 px-4 py-2 bg-firefly text-white rounded-md hover:bg-san-juan transition-colors"
                 >
                     Try Again
                 </button>
@@ -109,7 +123,7 @@ const Resources = () => {
                 subtitle="Access tutorials, tools, datasets and materials to support your research"
             />
 
-            {/* Resource type filter - FIXED CONTRAST ISSUES */}
+            {/* Resource type filter */}
             <div className="flex justify-center mb-4">
                 <div className="inline-flex rounded-md shadow-sm" role="group">
                     <button
@@ -117,7 +131,7 @@ const Resources = () => {
                         onClick={() => setResourceType("All")}
                         className={`px-4 py-2 text-sm font-medium border rounded-l-lg ${
                             resourceType === "All"
-                                ? "bg-gray-300 text-black border-casal"
+                                ? "bg-casal text-white border-casal"
                                 : "bg-white text-nevada border-iron hover:bg-iron/10"
                         }`}
                     >
@@ -128,7 +142,7 @@ const Resources = () => {
                         onClick={() => setResourceType("Resource")}
                         className={`px-4 py-2 text-sm font-medium border-t border-b border-r ${
                             resourceType === "Resource"
-                                ? "bg-gray-300 text-black border-casal"
+                                ? "bg-casal text-white border-casal"
                                 : "bg-white text-nevada border-iron hover:bg-iron/10"
                         }`}
                     >
@@ -139,7 +153,7 @@ const Resources = () => {
                         onClick={() => setResourceType("Dataset")}
                         className={`px-4 py-2 text-sm font-medium border-t border-b border-r rounded-r-lg ${
                             resourceType === "Dataset"
-                                ? "bg-gray-300 text-black border-casal"
+                                ? "bg-casal text-white border-casal"
                                 : "bg-white text-nevada border-iron hover:bg-iron/10"
                         }`}
                     >
@@ -148,7 +162,7 @@ const Resources = () => {
                 </div>
             </div>
 
-            {/* Category filter buttons - FIXED CONTRAST ISSUES */}
+            {/* Category filter buttons */}
             <div className="flex flex-wrap justify-center mb-8 gap-2">
                 {categories.map((category, index) => (
                     <button
@@ -156,7 +170,7 @@ const Resources = () => {
                         onClick={() => setSelectedCategory(category)}
                         className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
                             selectedCategory === category
-                                ? "bg-gray-300 text-black"
+                                ? "bg-casal text-white"
                                 : "bg-iron/20 text-nevada hover:bg-iron/30"
                         }`}
                     >
@@ -166,7 +180,7 @@ const Resources = () => {
             </div>
 
             {filteredResources.length === 0 && (
-                <p className="text-center text-lg text-nevada py-8">
+                <p className="text-center text-lg text-nevada py-8 bg-iron/5 rounded-lg border border-iron/10">
                     No resources or datasets found for the selected filters.
                 </p>
             )}
@@ -178,17 +192,17 @@ const Resources = () => {
                         className="hover:shadow-xl transition-all duration-300 border border-iron/10 h-full flex flex-col"
                     >
                         {item.image ? (
-                            <div className="mb-4">
+                            <div className="w-full h-48 overflow-hidden">
                                 <img
                                     src={item.image}
                                     alt={item.title}
-                                    className="w-full h-48 object-cover rounded-t-lg"
+                                    className="w-full h-full object-cover rounded-t-lg transform transition-transform duration-500 hover:scale-105"
                                 />
                             </div>
                         ) : (
-                            <div className="w-full h-48 bg-gray-200 flex items-center justify-center rounded-t-lg">
+                            <div className="w-full h-48 bg-gradient-to-r from-casal/10 to-firefly/10 flex items-center justify-center rounded-t-lg">
                                 <svg
-                                    className="h-12 w-12 text-gray-400"
+                                    className="h-12 w-12 text-iron"
                                     fill="none"
                                     viewBox="0 0 24 24"
                                     stroke="currentColor"
@@ -213,56 +227,101 @@ const Resources = () => {
                         )}
                         <div className="p-6 flex-grow flex flex-col">
                             <div className="flex-grow">
-                                <div className="flex justify-between items-start mb-2">
-                                    <h3 className="text-xl font-semibold text-gothic">
+                                <div className="flex justify-between items-start mb-3">
+                                    <h3 className="text-xl font-semibold text-firefly">
                                         {item.title}
                                     </h3>
                                     <div className="flex gap-2">
                                         <span
-                                            className={`text-xs px-2 py-1 rounded ${
+                                            className={`text-xs px-2 py-1 rounded-full ${
                                                 item.sourceType === "Dataset"
-                                                    ? "bg-blue-100 text-blue-800"
-                                                    : "bg-green-100 text-green-800"
+                                                    ? "bg-firefly/10 text-firefly"
+                                                    : "bg-casal/10 text-casal"
                                             }`}
                                         >
                                             {item.sourceType}
                                         </span>
-                                        {item.category && (
-                                            <span className="text-xs bg-iron/20 text-nevada px-2 py-1 rounded">
-                                                {item.category}
-                                            </span>
-                                        )}
                                     </div>
                                 </div>
-                                <p className="text-nevada mb-4">
-                                    {item.description}
-                                </p>
 
-                                {item.sourceType === "Dataset" && item.size && (
-                                    <p className="text-sm text-nevada mb-1">
-                                        <span className="font-medium">
-                                            Size:
-                                        </span>{" "}
-                                        {item.size}
-                                    </p>
+                                {item.category && (
+                                    <div className="mb-3">
+                                        <span className="text-xs bg-iron/20 text-nevada px-2 py-1 rounded-full">
+                                            {item.category}
+                                        </span>
+                                    </div>
                                 )}
 
-                                {item.sourceType === "Dataset" &&
-                                    item.formats &&
-                                    Array.isArray(item.formats) &&
-                                    item.formats.length > 0 && (
-                                        <p className="text-sm text-nevada mb-1">
-                                            <span className="font-medium">
-                                                Formats:
-                                            </span>{" "}
-                                            {item.formats.join(", ")}
+                                {item.description && (
+                                    <div className="mb-4">
+                                        <p className="text-nevada">
+                                            {expandedItems[index] ||
+                                            item.description.length <= 120
+                                                ? item.description
+                                                : `${item.description.substring(
+                                                      0,
+                                                      120
+                                                  )}...`}
                                         </p>
-                                    )}
+                                        {item.description.length > 120 && (
+                                            <button
+                                                onClick={() =>
+                                                    toggleExpanded(index)
+                                                }
+                                                className="mt-2 text-sm text-casal hover:text-gothic transition-colors font-medium"
+                                            >
+                                                {expandedItems[index]
+                                                    ? "Show less"
+                                                    : "Read more"}
+                                            </button>
+                                        )}
+                                    </div>
+                                )}
+
+                                {item.sourceType === "Dataset" && (
+                                    <div className="mt-3 mb-4">
+                                        {item.size && (
+                                            <p className="text-sm text-nevada mb-1">
+                                                <span className="font-medium">
+                                                    Size:
+                                                </span>{" "}
+                                                {item.size}
+                                            </p>
+                                        )}
+
+                                        {!expandedItems[index] && (
+                                            <button
+                                                onClick={() =>
+                                                    toggleExpanded(index)
+                                                }
+                                                className="mt-2 text-xs text-casal hover:text-gothic transition-colors inline-flex items-center"
+                                            >
+                                                View dataset details
+                                                <svg
+                                                    className="w-3 h-3 ml-1"
+                                                    fill="none"
+                                                    viewBox="0 0 24 24"
+                                                    stroke="currentColor"
+                                                >
+                                                    <path
+                                                        strokeLinecap="round"
+                                                        strokeLinejoin="round"
+                                                        strokeWidth="2"
+                                                        d="M19 9l-7 7-7-7"
+                                                    />
+                                                </svg>
+                                            </button>
+                                        )}
+                                    </div>
+                                )}
 
                                 {item.sourceType === "Resource" &&
                                     item.author && (
-                                        <p className="text-sm text-nevada">
-                                            By: {item.author}
+                                        <p className="text-sm text-nevada mb-2">
+                                            <span className="font-medium">
+                                                By:
+                                            </span>{" "}
+                                            {item.author}
                                         </p>
                                     )}
                             </div>
@@ -271,7 +330,7 @@ const Resources = () => {
                                     href={item.link}
                                     target="_blank"
                                     rel="noopener noreferrer"
-                                    className="mt-4 inline-block text-casal hover:text-gothic transition-colors font-medium"
+                                    className="mt-4 inline-block px-4 py-2 bg-casal/10 text-casal hover:bg-casal hover:text-white rounded-md transition-colors text-sm"
                                 >
                                     {item.sourceType === "Dataset"
                                         ? "Access Dataset →"

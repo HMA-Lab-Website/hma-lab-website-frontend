@@ -7,6 +7,7 @@ const Projects = () => {
     const [projects, setProjects] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [expandedDescriptions, setExpandedDescriptions] = useState({});
 
     useEffect(() => {
         const fetchProjects = async () => {
@@ -23,10 +24,84 @@ const Projects = () => {
         fetchProjects();
     }, []);
 
-    if (loading)
-        return <div className="text-center py-20">Loading projects...</div>;
-    if (error)
-        return <div className="text-center py-20 text-red-600">{error}</div>;
+    const toggleDescription = (projectId) => {
+        setExpandedDescriptions((prev) => ({
+            ...prev,
+            [projectId]: !prev[projectId],
+        }));
+    };
+
+    const truncateDescription = (text, id, maxLength = 150) => {
+        if (!text || text.length <= maxLength) return text;
+
+        const isExpanded = expandedDescriptions[id];
+        if (isExpanded) {
+            return (
+                <>
+                    <p>{text}</p>
+                    <button
+                        onClick={() => toggleDescription(id)}
+                        className="mt-2 text-sm text-casal hover:text-gothic transition-colors"
+                    >
+                        Show less
+                    </button>
+                </>
+            );
+        }
+
+        return (
+            <>
+                <p>{text.substring(0, maxLength)}...</p>
+                <button
+                    onClick={() => toggleDescription(id)}
+                    className="mt-2 text-sm text-casal hover:text-gothic transition-colors"
+                >
+                    Read more
+                </button>
+            </>
+        );
+    };
+
+    if (loading) {
+        return (
+            <div className="flex justify-center items-center h-96">
+                <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-casal"></div>
+            </div>
+        );
+    }
+
+    if (error) {
+        return (
+            <div className="text-center py-20 text-red-600 bg-red-50 rounded-lg border border-red-100 max-w-3xl mx-auto p-6">
+                <p className="text-lg font-medium mb-4">{error}</p>
+                <p className="text-nevada mb-6">
+                    Unable to load projects at this time.
+                </p>
+                <button
+                    onClick={() => window.location.reload()}
+                    className="px-4 py-2 bg-casal text-white rounded-md hover:bg-gothic transition-colors"
+                >
+                    Try Again
+                </button>
+            </div>
+        );
+    }
+
+    if (projects.length === 0) {
+        return (
+            <div className="max-w-7xl mx-auto px-4 py-12 mt-16">
+                <SectionHeader
+                    title="Research Projects"
+                    subtitle="Ongoing and completed research initiatives at our lab"
+                />
+                <div className="text-center py-12 bg-background rounded-lg border border-iron/20">
+                    <p className="text-nevada text-lg">
+                        No projects available at the moment.
+                    </p>
+                </div>
+            </div>
+        );
+    }
 
     return (
         <div className="max-w-7xl mx-auto px-4 py-12 mt-16">
@@ -36,68 +111,105 @@ const Projects = () => {
             />
 
             <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
-                {projects.map((project, index) => (
-                    <Card
-                        key={index}
-                        className="overflow-hidden flex flex-col h-full hover:shadow-xl transition-all duration-300 border border-iron/10"
-                    >
-                        {project.image && (
-                            <div className="relative h-48">
-                                <img
-                                    src={project.image}
-                                    alt={project.title}
-                                    className="w-full h-full object-cover"
-                                />
-                            </div>
-                        )}
-                        <div className="p-6 flex-grow">
-                            <div className="flex justify-between items-start mb-2">
-                                <h3 className="text-xl font-semibold text-firefly">
-                                    {project.title}
-                                </h3>
-                                <Badge
-                                    type={
-                                        project.status === "Ongoing"
-                                            ? "default"
-                                            : "success"
-                                    }
-                                >
-                                    {project.status}
-                                </Badge>
-                            </div>
-                            <p className="text-nevada mb-4">
-                                {project.description}
-                            </p>
-                            <div className="text-sm text-nevada mt-auto">
-                                <div className="flex justify-between mt-4">
-                                    <span>Started: {project.start_date}</span>
-                                    {project.end_date && (
-                                        <span>Ends: {project.end_date}</span>
+                {projects.map((project, index) => {
+                    const projectId =
+                        project.id || project._id || project.doc_id || index;
+                    return (
+                        <Card
+                            key={projectId}
+                            className="overflow-hidden flex flex-col h-full hover:shadow-xl transition-all duration-300 border border-iron/10"
+                        >
+                            {project.image ? (
+                                <div className="relative h-48 overflow-hidden">
+                                    <img
+                                        src={project.image}
+                                        alt={project.title}
+                                        className="w-full h-full object-cover transform hover:scale-105 transition-transform duration-500"
+                                    />
+                                    <div className="absolute inset-0 bg-gradient-to-t from-firefly/50 to-transparent opacity-0 hover:opacity-100 transition-opacity duration-300" />
+                                </div>
+                            ) : (
+                                <div className="h-48 bg-gradient-to-r from-casal/20 to-firefly/20 flex items-center justify-center">
+                                    <svg
+                                        className="h-16 w-16 text-gray-400"
+                                        fill="none"
+                                        viewBox="0 0 24 24"
+                                        stroke="currentColor"
+                                    >
+                                        <path
+                                            strokeLinecap="round"
+                                            strokeLinejoin="round"
+                                            strokeWidth="2"
+                                            d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                                        />
+                                    </svg>
+                                </div>
+                            )}
+                            <div className="p-6 flex-grow flex flex-col">
+                                <div className="flex justify-between items-start mb-2">
+                                    <h3 className="text-xl font-semibold text-firefly">
+                                        {project.title}
+                                    </h3>
+                                    <Badge
+                                        type={
+                                            project.status === "Ongoing"
+                                                ? "default"
+                                                : "success"
+                                        }
+                                    >
+                                        {project.status}
+                                    </Badge>
+                                </div>
+                                <div className="text-nevada mb-4">
+                                    {truncateDescription(
+                                        project.description,
+                                        projectId
                                     )}
                                 </div>
+
+                                {project.technologies && (
+                                    <div className="flex flex-wrap gap-1 mt-2 mb-4">
+                                        {project.technologies
+                                            .split(",")
+                                            .map((tech, i) => (
+                                                <span
+                                                    key={i}
+                                                    className="bg-iron/10 text-nevada text-xs px-2 py-1 rounded-full"
+                                                >
+                                                    {tech.trim()}
+                                                </span>
+                                            ))}
+                                    </div>
+                                )}
+
+                                <div className="text-sm text-nevada mt-auto">
+                                    <div className="flex justify-between mt-4 border-t border-iron/10 pt-4">
+                                        <span>
+                                            Started: {project.start_date}
+                                        </span>
+                                        {project.end_date && (
+                                            <span>
+                                                Ended: {project.end_date}
+                                            </span>
+                                        )}
+                                    </div>
+                                </div>
                             </div>
-                        </div>
-                        {project.github_link && (
-                            <div className="px-6 pb-4">
-                                <a
-                                    href={project.github_link}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    className="text-casal hover:text-gothic transition-colors text-sm flex items-center"
-                                >
-                                    <svg
-                                        className="h-4 w-4 mr-2"
-                                        fill="currentColor"
-                                        viewBox="0 0 24 24"
+                            {project.github_link && (
+                                <div className="px-6 pb-6 pt-2">
+                                    <a
+                                        href={project.github_link}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="inline-block bg-casal/10 text-casal hover:bg-casal hover:text-white px-4 py-2 rounded-md transition-colors text-sm flex items-center w-full justify-center"
                                     >
-                                        <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z" />
-                                    </svg>
-                                    View Project Repository
-                                </a>
-                            </div>
-                        )}
-                    </Card>
-                ))}
+                                        View Project
+                                    </a>
+                                </div>
+                            )}
+                        </Card>
+                    );
+                })}
             </div>
         </div>
     );

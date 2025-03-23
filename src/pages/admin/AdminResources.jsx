@@ -76,7 +76,7 @@ const AdminResources = () => {
                 <div key={field.id} className="mb-4">
                     <label
                         htmlFor={field.id}
-                        className="block text-sm font-medium text-nevada mb-1"
+                        className="block text-sm font-medium text-gray-700 mb-1"
                     >
                         {field.label}{" "}
                         {field.required && (
@@ -88,7 +88,7 @@ const AdminResources = () => {
                         name={field.id}
                         value={formData[field.id] || ""}
                         onChange={handleInputChange}
-                        className="w-full px-3 py-2 border border-iron rounded-md focus:outline-none focus:ring-2 focus:ring-casal/50"
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-casal/50"
                         required={field.required}
                     >
                         {field.options.map((option) => (
@@ -114,6 +114,7 @@ const AdminResources = () => {
                 textarea={field.textarea}
                 rows={field.rows}
                 error=""
+                maxLength={field.maxLength} // Ensure this is passed through
             />
         );
     };
@@ -164,8 +165,8 @@ const AdminResources = () => {
             formFields={formFields}
             initialFormData={initialFormData}
             renderField={renderField}
-            buttonColor="bg-gray-300 hover:bg-gray-400"
-            buttonTextColor="text-black"
+            buttonColor="bg-casal hover:bg-gothic"
+            buttonTextColor="text-white"
             apiMethod="add_item"
             onCustomDelete={handleDelete}
             idField="doc_id"

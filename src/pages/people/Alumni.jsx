@@ -27,7 +27,7 @@ const Alumni = () => {
     if (loading) {
         return (
             <div className="flex justify-center items-center h-96">
-                <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-firefly"></div>
+                <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-casal"></div>
             </div>
         );
     }
@@ -38,7 +38,7 @@ const Alumni = () => {
                 <p className="text-xl">{error}</p>
                 <button
                     onClick={() => window.location.reload()}
-                    className="mt-4 px-4 py-2 bg-firefly text-black rounded-md hover:bg-opacity-90 transition-colors"
+                    className="mt-4 px-4 py-2 bg-firefly text-white rounded-md hover:bg-san-juan transition-colors"
                 >
                     Try Again
                 </button>
@@ -197,6 +197,18 @@ const AlumniCard = ({ person }) => {
                         <div className="text-sm text-casal">
                             {person.batch || "Alumni"}
                         </div>
+                        {person.current_location && (
+                            <div className="mt-4">
+                                <a
+                                    href={person.current_location}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="text-casal hover:text-gothic transition-colors flex items-center justify-center"
+                                >
+                                    View Location
+                                </a>
+                            </div>
+                        )}
                     </div>
                 </Card>
             </div>

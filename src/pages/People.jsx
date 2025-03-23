@@ -10,14 +10,14 @@ const People = () => {
             path: "/people/current",
             description:
                 "Meet our faculty, researchers, graduate students and staff who make our research possible",
-            image: "/images/current-team.jpg", // Add a placeholder image path
+            image: "https://billericalibrary.org/wp-content/uploads/Teamwork-clipart-2.jpg", // Add a placeholder image path
         },
         {
             title: "Alumni",
             path: "/people/alumni",
             description:
                 "Former lab members who have contributed to our research journey",
-            image: "/images/alumni.jpg", // Add a placeholder image path
+            image: "https://bestaccreditedcolleges.org/cimages/multimages/16/twitter-socialnetwork.jpg", // Add a placeholder image path
         },
     ];
 

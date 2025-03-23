@@ -69,7 +69,7 @@ const AdminLayout = ({ children }) => {
     };
 
     return (
-        <div className="min-h-screen bg-gray-100 flex">
+        <div className="min-h-screen bg-background flex">
             {/* Sidebar */}
             <div
                 className={`bg-white border-r border-iron/20 text-firefly transition-all duration-300 ${
@@ -127,8 +127,8 @@ const AdminLayout = ({ children }) => {
                                                     ${
                                                         expandedMenu ===
                                                         item.name
-                                                            ? "bg-gray-300/10 text-casal font-medium"
-                                                            : "text-nevada hover:bg-iron/10 hover:text-firefly"
+                                                            ? "bg-casal/10 text-casal font-medium"
+                                                            : "hover:bg-san-juan/10 text-nevada hover:text-firefly"
                                                     }`}
                                         >
                                             <i
@@ -182,8 +182,8 @@ const AdminLayout = ({ children }) => {
                                                                     ${
                                                                         location.pathname ===
                                                                         subItem.path
-                                                                            ? "bg-san-juan/40 text-black"
-                                                                            : "hover:bg-san-juan/20 text-iron/80"
+                                                                            ? "bg-casal/20 text-firefly font-medium"
+                                                                            : "hover:bg-iron/10 text-nevada hover:text-firefly"
                                                                     }`}
                                                                 >
                                                                     {
@@ -203,8 +203,8 @@ const AdminLayout = ({ children }) => {
                                                 ${
                                                     location.pathname ===
                                                     item.path
-                                                        ? "bg-san-juan text-gray-900"
-                                                        : "hover:bg-san-juan/20 text-iron/80"
+                                                        ? "bg-casal/10 text-casal font-medium"
+                                                        : "hover:bg-iron/10 text-nevada hover:text-firefly"
                                                 }`}
                                     >
                                         <i

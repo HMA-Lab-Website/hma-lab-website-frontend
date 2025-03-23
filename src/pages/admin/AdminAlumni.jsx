@@ -10,7 +10,7 @@ const AdminAlumni = () => {
         current_position: "",
         image: "",
         linkedin: "",
-        Current_Location: "", // Fixed: Capital C to match the schema
+        current_location: "", // Fixed: Changed from "Current_Location" for consistency
     };
 
     const columns = [
@@ -58,8 +58,8 @@ const AdminAlumni = () => {
         { id: "image", label: "Profile Picture", type: "file" },
         { id: "linkedin", label: "LinkedIn Profile", maxLength: 250 },
         {
-            id: "Current_Location",
-            label: "Google Maps Embed Link",
+            id: "current_location", // Fixed: Changed from "Current_Location"
+            label: "Current Location",
             maxLength: 500,
         },
     ];
@@ -111,8 +111,8 @@ const AdminAlumni = () => {
             columns={columns}
             formFields={formFields}
             initialFormData={initialFormData}
-            buttonColor="bg-gray-300 hover:bg-gray-400"
-            buttonTextColor="text-black"
+            buttonColor="bg-casal hover:bg-gothic" // Fixed: Changed to theme colors
+            buttonTextColor="text-white" // Fixed: Changed to white for better contrast
             apiMethod="add_item"
             onCustomDelete={handleDelete} // Custom delete handler
             idField="doc_id" // Specify the correct field name for ID

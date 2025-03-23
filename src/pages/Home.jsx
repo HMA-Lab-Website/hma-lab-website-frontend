@@ -138,29 +138,47 @@ const Home = () => {
         </div>
     );
 
-    // Connected topics visualization
+    // IMPROVED: Research topics visualization with better positioning and styling
     const researchTopics = [
-        { id: "ml", name: "Machine Learning", x: "20%", y: "30%" },
-        { id: "cv", name: "Computer Vision", x: "50%", y: "20%" },
-        { id: "nlp", name: "Natural Language Processing", x: "80%", y: "30%" },
-        { id: "ai", name: "Artificial Intelligence", x: "35%", y: "70%" },
-        { id: "ml-ops", name: "ML Operations", x: "65%", y: "70%" },
+        { id: "ml", name: "Machine Learning", x: 250, y: 150, color: "casal" },
+        { id: "cv", name: "Computer Vision", x: 450, y: 100, color: "firefly" },
+        {
+            id: "nlp",
+            name: "Natural Language Processing",
+            x: 650,
+            y: 180,
+            color: "san-juan",
+        },
+        {
+            id: "ai",
+            name: "Artificial Intelligence",
+            x: 300,
+            y: 300,
+            color: "gothic",
+        },
+        {
+            id: "ml-ops",
+            name: "ML Operations",
+            x: 500,
+            y: 350,
+            color: "nevada",
+        },
     ];
 
-    // Define connections between topics
+    // Define connections between topics with better curve control
     const connections = [
-        { from: "ml", to: "cv" },
-        { from: "ml", to: "nlp" },
-        { from: "ml", to: "ai" },
-        { from: "ai", to: "cv" },
-        { from: "ai", to: "nlp" },
-        { from: "ml-ops", to: "ml" },
+        { from: "ml", to: "cv", color: "casal" },
+        { from: "ml", to: "nlp", color: "firefly" },
+        { from: "ml", to: "ai", color: "gothic" },
+        { from: "ai", to: "cv", color: "san-juan" },
+        { from: "ai", to: "nlp", color: "nevada" },
+        { from: "ml-ops", to: "ml", color: "firefly" },
     ];
 
     return (
         <div className="space-y-16">
             {/* Hero section with animated network background */}
-            <section className="relative bg-gradient-to-br from-gray-300 to-gray-700 py-24 px-4 w-full min-h-[90vh] flex items-center overflow-hidden">
+            <section className="relative bg-gradient-to-br from-firefly to-san-juan py-24 px-4 w-full min-h-[90vh] flex items-center overflow-hidden">
                 <NetworkAnimation />
                 <div className="max-w-7xl mx-auto z-10 relative">
                     <div className="flex flex-col md:flex-row items-center justify-between">
@@ -170,13 +188,11 @@ const Home = () => {
                             animate={{ opacity: 1, x: 0 }}
                             transition={{ duration: 0.8 }}
                         >
-                            <h1 className="text-6xl font-bold mb-6 text-iron leading-tight">
+                            <h1 className="text-6xl font-bold mb-6 text-white leading-tight">
                                 Human Movement{" "}
-                                <span className="text-gray-700">
-                                    Analysis Lab
-                                </span>
+                                <span className="text-iron">Analysis Lab</span>
                             </h1>
-                            <p className="text-iron/90 text-xl max-w-2xl leading-relaxed mb-8">
+                            <p className="text-white/90 text-xl max-w-2xl leading-relaxed mb-8">
                                 Pioneering the future of AI and Machine Learning
                                 through groundbreaking research and innovative
                                 solutions that bridge the gap between human
@@ -209,7 +225,7 @@ const Home = () => {
                                 className="rounded-lg shadow-2xl w-full h-[400px] object-cover object-center ring-4 ring-white/10"
                             />
                             <div className="mt-4 bg-white/10 backdrop-blur-sm p-4 rounded-lg">
-                                <p className="text-iron text-sm">
+                                <p className="text-white text-sm">
                                     Our lab focuses on developing innovative AI
                                     solutions that enhance human-movement
                                     interaction and analysis capabilities.
@@ -236,7 +252,7 @@ const Home = () => {
                                 }}
                             >
                                 <Card className="text-center transform hover:-translate-y-2 transition-all duration-300 border border-iron/10 shadow-lg">
-                                    <div className="text-5xl font-bold text-san-juan mb-2">
+                                    <div className="text-5xl font-bold text-casal mb-2">
                                         {statsVisible ? (
                                             <AnimatedCounter
                                                 end={parseInt(stat.number)}
@@ -257,99 +273,9 @@ const Home = () => {
                 </section>
             </div>
 
-            {/* Research Vision with Visualization */}
-            <section className="w-full bg-iron/5 py-16">
-                <div className="max-w-7xl mx-auto px-4">
-                    <SectionHeader
-                        title="Our Research Vision"
-                        subtitle="Connecting various domains of AI research to solve complex problems"
-                    />
+            {/* IMPROVED: Research Vision with Better Visualization */}
 
-                    <div className="mt-12">
-                        <div className="relative h-[500px] bg-white rounded-xl shadow-xl overflow-hidden">
-                            {/* Topics Nodes */}
-                            {researchTopics.map((topic, index) => (
-                                <motion.div
-                                    key={topic.id}
-                                    className="absolute transform -translate-x-1/2 -translate-y-1/2"
-                                    style={{ left: topic.x, top: topic.y }}
-                                    initial={{ scale: 0, opacity: 0 }}
-                                    animate={{ scale: 1, opacity: 1 }}
-                                    transition={{
-                                        type: "spring",
-                                        stiffness: 200,
-                                        damping: 20,
-                                        delay: 0.5 + index * 0.2,
-                                    }}
-                                >
-                                    <div className="bg-firefly text-black px-4 py-2 rounded-full shadow-lg whitespace-nowrap">
-                                        {topic.name}
-                                    </div>
-                                </motion.div>
-                            ))}
-
-                            {/* SVG Connections */}
-                            <svg className="absolute inset-0 w-full h-full">
-                                {connections.map((connection, index) => {
-                                    const fromTopic = researchTopics.find(
-                                        (t) => t.id === connection.from
-                                    );
-                                    const toTopic = researchTopics.find(
-                                        (t) => t.id === connection.to
-                                    );
-
-                                    // Convert percentage to actual coordinates
-                                    const fromX =
-                                        (parseFloat(fromTopic.x) / 100) * 100;
-                                    const fromY =
-                                        (parseFloat(fromTopic.y) / 100) * 100;
-                                    const toX =
-                                        (parseFloat(toTopic.x) / 100) * 100;
-                                    const toY =
-                                        (parseFloat(toTopic.y) / 100) * 100;
-
-                                    return (
-                                        <motion.path
-                                            key={`${connection.from}-${connection.to}`}
-                                            d={`M ${fromX}% ${fromY}% L ${toX}% ${toY}%`}
-                                            stroke="#64748b"
-                                            strokeWidth="2"
-                                            fill="none"
-                                            strokeDasharray="6,6"
-                                            initial={{
-                                                pathLength: 0,
-                                                opacity: 0,
-                                            }}
-                                            animate={{
-                                                pathLength: 1,
-                                                opacity: 0.6,
-                                            }}
-                                            transition={{
-                                                delay: 1 + index * 0.2,
-                                                duration: 1.5,
-                                                ease: "easeInOut",
-                                            }}
-                                        />
-                                    );
-                                })}
-                            </svg>
-                        </div>
-
-                        <div className="mt-8 text-center">
-                            <Link to="/research">
-                                <Button
-                                    variant="outline"
-                                    className="font-semibold"
-                                >
-                                    Explore Our Research
-                                </Button>
-                            </Link>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            {/* Research Areas Section */}
+            {/* Research Areas Section - FIXED CARD HOVER EFFECTS */}
             <section className="w-full py-16">
                 <div className="max-w-7xl mx-auto px-4">
                     <SectionHeader
@@ -368,21 +294,27 @@ const Home = () => {
                                 }}
                                 viewport={{ once: true, margin: "-50px" }}
                             >
-                                <Card className="overflow-hidden group hover:shadow-2xl transition-all duration-300 h-full">
-                                    <div className="relative">
+                                <Card className="overflow-hidden group hover:shadow-2xl transition-all duration-300 h-full flex flex-col">
+                                    <div className="relative h-48">
                                         <img
                                             src={area.image}
                                             alt={area.title}
-                                            className="w-full h-48 object-cover transform group-hover:scale-105 transition-transform duration-700"
+                                            className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700"
                                         />
+                                        {/* Fixed overlay to prevent text overlap */}
                                         <div className="absolute inset-0 bg-gradient-to-t from-firefly/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                                        <div className="absolute bottom-0 left-0 right-0 p-4 text-black translate-y-full group-hover:translate-y-0 transition-transform duration-300">
-                                            <h4 className="text-lg font-semibold">
-                                                {area.title}
+
+                                        {/* Text that appears on hover without overlapping */}
+                                        <div
+                                            className="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-firefly/90 to-firefly/0 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                                            style={{ transform: "none" }}
+                                        >
+                                            <h4 className="text-lg font-semibold text-white">
+                                                Contact Us
                                             </h4>
                                         </div>
                                     </div>
-                                    <div className="p-6">
+                                    <div className="p-6 flex-grow flex flex-col">
                                         <h3 className="text-xl font-semibold text-firefly mb-3">
                                             {area.title}
                                         </h3>
@@ -398,7 +330,7 @@ const Home = () => {
             </section>
 
             {/* News section - contained */}
-            <div className="px-4 pb-16">
+            <div className="px-4 pb-16 bg-background">
                 <section className="max-w-7xl mx-auto">
                     <SectionHeader
                         title="Latest Updates"
@@ -461,7 +393,10 @@ const Home = () => {
 
                     <div className="mt-8 text-center">
                         <Link to="/news">
-                            <Button variant="outline" className="font-semibold">
+                            <Button
+                                variant="secondary"
+                                className="font-semibold"
+                            >
                                 View All News
                             </Button>
                         </Link>
@@ -472,16 +407,16 @@ const Home = () => {
             {/* Join Us CTA */}
             <section className="relative bg-gradient-to-tr from-firefly to-san-juan py-16 px-4">
                 <div className="max-w-7xl mx-auto flex flex-col items-center text-center">
-                    <h2 className="text-3xl font-bold text-black mb-4">
+                    <h2 className="text-3xl font-bold text-white mb-4">
                         Join Our Research Team
                     </h2>
-                    <p className="text-iron/90 text-lg max-w-2xl mb-8">
+                    <p className="text-white/90 text-lg max-w-2xl mb-8">
                         We're always looking for talented researchers, students,
                         and collaborators to join our team and help push the
                         boundaries of AI and machine learning.
                     </p>
                     <Link to="/contact">
-                        <Button variant="outline" className="font-semibold">
+                        <Button variant="outline1" className="font-semibold">
                             Contact Us
                         </Button>
                     </Link>

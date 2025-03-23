@@ -4,7 +4,7 @@ export const FormField = ({
     id,
     label,
     type = "text",
-    value,
+    value = "",
     onChange,
     placeholder = "",
     required = false,
@@ -13,33 +13,25 @@ export const FormField = ({
     error = "",
     maxLength,
 }) => {
-    // Calculate current character count and percentage for visual indicator
-    const charCount = value ? value.length : 0;
-    const charPercentage = maxLength
+    // Calculate current character count and percentage
+    const charCount = value?.length || 0;
+    const showCounter =
+        maxLength && (type === "text" || textarea || type === "email");
+    const percentage = maxLength
         ? Math.min((charCount / maxLength) * 100, 100)
         : 0;
-    const isApproachingLimit = charPercentage > 80;
-    const isAtLimit = charPercentage >= 100;
 
-    // Common props for both input and textarea
-    const commonProps = {
-        id,
-        name: id,
-        value: value || "",
-        onChange,
-        placeholder,
-        required,
-        maxLength,
-        className: `w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-casal/50 
-                  ${error ? "border-red-300" : "border-gray-300"}
-                  ${
-                      isAtLimit
-                          ? "border-red-300"
-                          : isApproachingLimit
-                          ? "border-yellow-300"
-                          : ""
-                  }`,
-    };
+    // Determine counter color based on percentage
+    let counterColor = "text-gray-500";
+    let progressColor = "bg-green-500";
+
+    if (percentage >= 90) {
+        counterColor = "text-red-500 font-medium";
+        progressColor = "bg-red-500";
+    } else if (percentage >= 75) {
+        counterColor = "text-yellow-600";
+        progressColor = "bg-yellow-500";
+    }
 
     return (
         <div className="mb-4">
@@ -52,76 +44,79 @@ export const FormField = ({
 
             {textarea ? (
                 <div className="relative">
-                    <textarea {...commonProps} rows={rows} />
-                    {maxLength && (
+                    <textarea
+                        id={id}
+                        name={id}
+                        value={value}
+                        onChange={onChange}
+                        placeholder={placeholder}
+                        rows={rows}
+                        maxLength={maxLength}
+                        required={required}
+                        className={`w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-casal/50 
+                                  ${
+                                      error
+                                          ? "border-red-300"
+                                          : "border-gray-300"
+                                  }
+                                  ${percentage >= 90 ? "border-red-300" : ""}`}
+                    />
+                    {showCounter && (
                         <div className="mt-1 flex items-center justify-between text-xs">
-                            <div className="flex-1 mr-2">
+                            <div className="w-full mr-2">
                                 <div className="w-full bg-gray-200 rounded-full h-1.5">
                                     <div
-                                        className={`h-1.5 rounded-full ${
-                                            isAtLimit
-                                                ? "bg-red-500"
-                                                : isApproachingLimit
-                                                ? "bg-yellow-500"
-                                                : "bg-green-500"
-                                        }`}
-                                        style={{ width: `${charPercentage}%` }}
-                                    ></div>
+                                        className={`h-1.5 rounded-full ${progressColor} transition-all duration-300`}
+                                        style={{ width: `${percentage}%` }}
+                                    />
                                 </div>
                             </div>
-                            <div
-                                className={`${
-                                    isAtLimit
-                                        ? "text-red-500 font-medium"
-                                        : isApproachingLimit
-                                        ? "text-yellow-600"
-                                        : "text-gray-500"
-                                }`}
-                            >
+                            <div className={`ml-2 ${counterColor}`}>
                                 {charCount}/{maxLength}
                             </div>
                         </div>
                     )}
                 </div>
             ) : type === "file" ? (
-                <div className="mt-1 flex items-center">
-                    <input
-                        type="file"
-                        id={id}
-                        name={id}
-                        onChange={onChange}
-                        className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-casal focus:border-casal"
-                        accept="image/*"
-                    />
-                </div>
+                <input
+                    type="file"
+                    id={id}
+                    name={id}
+                    onChange={onChange}
+                    required={required}
+                    accept="image/*"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-casal focus:border-casal"
+                />
             ) : (
                 <div className="relative">
-                    <input type={type} {...commonProps} />
-                    {maxLength && (
+                    <input
+                        type={type}
+                        id={id}
+                        name={id}
+                        value={value}
+                        onChange={onChange}
+                        placeholder={placeholder}
+                        maxLength={maxLength}
+                        required={required}
+                        className={`w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-casal/50
+                                  ${
+                                      error
+                                          ? "border-red-300"
+                                          : "border-gray-300"
+                                  }
+                                  ${percentage >= 90 ? "border-red-300" : ""}`}
+                    />
+                    {showCounter && (
                         <div className="mt-1 flex items-center justify-between text-xs">
-                            <div className="flex-1 mr-2">
+                            <div className="w-full mr-2">
                                 <div className="w-full bg-gray-200 rounded-full h-1.5">
                                     <div
-                                        className={`h-1.5 rounded-full ${
-                                            isAtLimit
-                                                ? "bg-red-500"
-                                                : isApproachingLimit
-                                                ? "bg-yellow-500"
-                                                : "bg-green-500"
-                                        }`}
-                                        style={{ width: `${charPercentage}%` }}
-                                    ></div>
+                                        className={`h-1.5 rounded-full ${progressColor} transition-all duration-300`}
+                                        style={{ width: `${percentage}%` }}
+                                    />
                                 </div>
                             </div>
-                            <div
-                                className={`${
-                                    isAtLimit
-                                        ? "text-red-500 font-medium"
-                                        : isApproachingLimit
-                                        ? "text-yellow-600"
-                                        : "text-gray-500"
-                                }`}
-                            >
+                            <div className={`ml-2 ${counterColor}`}>
                                 {charCount}/{maxLength}
                             </div>
                         </div>

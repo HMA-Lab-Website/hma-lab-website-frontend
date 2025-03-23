@@ -97,6 +97,55 @@ const AdminStudents = () => {
         return true;
     };
 
+    const renderField = (field, formData, handleInputChange) => {
+        if (field.type === "select") {
+            return (
+                <div key={field.id} className="mb-4">
+                    <label
+                        htmlFor={field.id}
+                        className="block text-sm font-medium text-firefly mb-1"
+                    >
+                        {field.label}{" "}
+                        {field.required && (
+                            <span className="text-red-500">*</span>
+                        )}
+                    </label>
+                    <select
+                        id={field.id}
+                        name={field.id}
+                        value={formData[field.id] || ""}
+                        onChange={handleInputChange}
+                        className="w-full px-3 py-2 border border-iron rounded-md focus:outline-none focus:ring-2 focus:ring-casal/50"
+                        required={field.required}
+                    >
+                        {field.options.map((option) => (
+                            <option key={option} value={option}>
+                                {option}
+                            </option>
+                        ))}
+                    </select>
+                </div>
+            );
+        }
+
+        return (
+            <FormField
+                key={field.id}
+                id={field.id}
+                label={field.label}
+                type={field.type || "text"}
+                value={formData[field.id] || ""}
+                onChange={handleInputChange}
+                placeholder={field.placeholder || ""}
+                required={field.required}
+                textarea={field.textarea}
+                rows={field.rows}
+                error=""
+                maxLength={field.maxLength} // Added this prop to enable character counter
+            />
+        );
+    };
+
     return (
         <AdminCollectionPage
             title="Student"
@@ -104,11 +153,12 @@ const AdminStudents = () => {
             columns={columns}
             formFields={formFields}
             initialFormData={initialFormData}
-            buttonColor="bg-gray-300 hover:bg-gray-400"
-            buttonTextColor="text-black"
+            buttonColor="bg-casal hover:bg-gothic"
+            buttonTextColor="text-white"
             apiMethod="add_item"
             onCustomDelete={handleDelete}
             idField="doc_id"
+            renderField={renderField}
         />
     );
 };

@@ -8,7 +8,7 @@ const Footer = () => {
                         <img
                             src="/HMA-Lab-Logo.png"
                             alt="Lab Logo"
-                            className="h-12 w-auto"
+                            className="h-12 w-auto bg-white"
                         />
                         <p className="text-sm leading-relaxed opacity-80">
                             Human Movement Analysis Lab at IIIT Sri City is
@@ -19,14 +19,14 @@ const Footer = () => {
 
                     {/* Quick Links */}
                     <div>
-                        <h3 className="text-lg font-semibold mb-4">
+                        <h3 className="text-lg font-semibold mb-4 text-white">
                             Quick Links
                         </h3>
                         <ul className="space-y-2 text-sm">
                             <li>
                                 <a
                                     href="/research"
-                                    className="hover:text-gray500 transition-colors"
+                                    className="hover:text-regent transition-colors"
                                 >
                                     Research
                                 </a>
@@ -34,7 +34,7 @@ const Footer = () => {
                             <li>
                                 <a
                                     href="/publications"
-                                    className="hover:text-gray500 transition-colors"
+                                    className="hover:text-regent transition-colors"
                                 >
                                     Publications
                                 </a>
@@ -42,7 +42,7 @@ const Footer = () => {
                             <li>
                                 <a
                                     href="/people"
-                                    className="hover:text-gray500 transition-colors"
+                                    className="hover:text-regent transition-colors"
                                 >
                                     People
                                 </a>
@@ -50,7 +50,7 @@ const Footer = () => {
                             <li>
                                 <a
                                     href="/news"
-                                    className="hover:text-gray500 transition-colors"
+                                    className="hover:text-regent transition-colors"
                                 >
                                     News
                                 </a>
@@ -60,7 +60,9 @@ const Footer = () => {
 
                     {/* Contact */}
                     <div>
-                        <h3 className="text-lg font-semibold mb-4">Contact</h3>
+                        <h3 className="text-lg font-semibold mb-4 text-white">
+                            Contact
+                        </h3>
                         <div className="space-y-2 text-sm">
                             <p>IIIT Sri City</p>
                             <p>Sri City, Andhra Pradesh</p>
@@ -68,7 +70,7 @@ const Footer = () => {
                             <p className="mt-4">
                                 <a
                                     href="mailto:hmadata@iiits.in"
-                                    className="hover:text-gray500 transition-colors"
+                                    className="hover:text-regent transition-colors"
                                 >
                                     hmadata@iiits.in
                                 </a>
@@ -78,11 +80,13 @@ const Footer = () => {
 
                     {/* Connect */}
                     <div>
-                        <h3 className="text-lg font-semibold mb-4">Connect</h3>
+                        <h3 className="text-lg font-semibold mb-4 text-white">
+                            Connect
+                        </h3>
                         <div className="flex space-x-4">
                             <a
                                 href="#"
-                                className="text-iron hover:text-gray500 transition-colors"
+                                className="text-iron hover:text-regent transition-colors"
                             >
                                 <svg
                                     className="h-6 w-6"
@@ -94,7 +98,7 @@ const Footer = () => {
                             </a>
                             <a
                                 href="#"
-                                className="text-iron hover:text-gray500 transition-colors"
+                                className="text-iron hover:text-regent transition-colors"
                             >
                                 <svg
                                     className="h-6 w-6"
@@ -106,7 +110,7 @@ const Footer = () => {
                             </a>
                             <a
                                 href="#"
-                                className="text-iron hover:text-gray500 transition-colors"
+                                className="text-iron hover:text-regent transition-colors"
                             >
                                 <svg
                                     className="h-6 w-6"
@@ -128,13 +132,13 @@ const Footer = () => {
                     <div className="flex space-x-6 mt-4 md:mt-0">
                         <a
                             href="/privacy"
-                            className="text-sm hover:text-gray500 transition-colors"
+                            className="text-sm hover:text-regent transition-colors"
                         >
                             Privacy Policy
                         </a>
                         <a
                             href="/terms"
-                            className="text-sm hover:text-gray500 transition-colors"
+                            className="text-sm hover:text-regent transition-colors"
                         >
                             Terms of Use
                         </a>

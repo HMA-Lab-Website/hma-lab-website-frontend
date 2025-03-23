@@ -64,11 +64,14 @@ const Research = () => {
 
     if (error)
         return (
-            <div className="text-center py-20 text-red-600">
-                <p className="text-xl">{error}</p>
+            <div className="text-center py-20 text-red-600 bg-red-50 rounded-lg border border-red-100 max-w-3xl mx-auto p-6">
+                <p className="text-xl font-medium mb-4">{error}</p>
+                <p className="text-nevada mb-6">
+                    Unable to load research data at this time.
+                </p>
                 <button
                     onClick={() => window.location.reload()}
-                    className="mt-4 px-4 py-2 bg-gray-300 text-black rounded-md hover:bg-opacity-90 transition-colors"
+                    className="mt-4 px-4 py-2 bg-firefly text-white rounded-md hover:bg-san-juan transition-colors"
                 >
                     Try Again
                 </button>
@@ -84,12 +87,12 @@ const Research = () => {
 
             {/* Research Focus Areas */}
             <div className="mb-16">
-                <h2 className="text-2xl font-semibold text-casal mb-6">
+                <h2 className="text-2xl font-semibold text-firefly mb-6">
                     Our Research Focus
                 </h2>
                 <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
                     <div className="bg-iron/5 p-6 rounded-lg border border-iron/10 hover:shadow-md transition-all">
-                        <h3 className="text-lg font-medium text-gothic mb-3">
+                        <h3 className="text-lg font-medium text-firefly mb-3">
                             Machine Learning
                         </h3>
                         <p className="text-nevada">
@@ -98,7 +101,7 @@ const Research = () => {
                         </p>
                     </div>
                     <div className="bg-iron/5 p-6 rounded-lg border border-iron/10 hover:shadow-md transition-all">
-                        <h3 className="text-lg font-medium text-gothic mb-3">
+                        <h3 className="text-lg font-medium text-firefly mb-3">
                             Natural Language Processing
                         </h3>
                         <p className="text-nevada">
@@ -107,7 +110,7 @@ const Research = () => {
                         </p>
                     </div>
                     <div className="bg-iron/5 p-6 rounded-lg border border-iron/10 hover:shadow-md transition-all">
-                        <h3 className="text-lg font-medium text-gothic mb-3">
+                        <h3 className="text-lg font-medium text-firefly mb-3">
                             Computer Vision
                         </h3>
                         <p className="text-nevada">
@@ -121,7 +124,7 @@ const Research = () => {
             {/* Publications Section */}
             <div className="mb-16">
                 <div className="flex flex-wrap items-center justify-between mb-6">
-                    <h2 className="text-2xl font-semibold text-casal">
+                    <h2 className="text-2xl font-semibold text-firefly">
                         Recent Publications
                     </h2>
 
@@ -135,9 +138,9 @@ const Research = () => {
                                 <button
                                     key={year}
                                     onClick={() => setSelectedYear(year)}
-                                    className={`px-3 py-1 text-xs font-medium rounded ${
+                                    className={`px-3 py-1 text-xs font-medium rounded transition-colors ${
                                         selectedYear === year
-                                            ? "bg-gray-300 text-black"
+                                            ? "bg-casal text-white"
                                             : "bg-iron/10 text-nevada hover:bg-iron/20"
                                     }`}
                                 >
@@ -149,7 +152,7 @@ const Research = () => {
                 </div>
 
                 {filteredPublications.length === 0 && (
-                    <p className="text-center text-nevada py-8">
+                    <p className="text-center text-nevada py-8 bg-iron/5 rounded-lg">
                         No publications found for the selected year.
                     </p>
                 )}
@@ -160,11 +163,11 @@ const Research = () => {
                         .map((publication, index) => (
                             <Card
                                 key={index}
-                                className="hover:shadow-xl transition-shadow duration-200 h-full"
+                                className="hover:shadow-xl transition-all duration-300 h-full border border-iron/10 flex flex-col"
                             >
                                 <div className="flex flex-col h-full">
                                     <div className="flex items-start justify-between mb-3">
-                                        <Badge className="bg-gray-300/10 text-casal">
+                                        <Badge type="default">
                                             {publication.year}
                                         </Badge>
                                         {publication.journal && (
@@ -174,20 +177,20 @@ const Research = () => {
                                         )}
                                     </div>
 
-                                    <h3 className="text-xl font-semibold text-gothic mb-2">
+                                    <h3 className="text-xl font-semibold text-firefly mb-2">
                                         {publication.title}
                                     </h3>
 
-                                    <p className="text-sm text-nevada mb-3 italic">
+                                    <p className="text-sm text-casal mb-3 italic">
                                         {publication.authors}
                                     </p>
 
                                     {publication.image && (
-                                        <div className="mb-4">
+                                        <div className="mb-4 overflow-hidden rounded-lg">
                                             <img
                                                 src={publication.image}
                                                 alt={publication.title}
-                                                className="w-full h-40 object-cover rounded-lg"
+                                                className="w-full h-40 object-cover transform hover:scale-105 transition-transform duration-500"
                                             />
                                         </div>
                                     )}
@@ -235,7 +238,7 @@ const Research = () => {
                     <div className="mt-8 text-center">
                         <Link
                             to="/publications"
-                            className="inline-block px-5 py-2 bg-gray-300 text-black rounded-md hover:bg-opacity-90 transition-colors"
+                            className="inline-block px-5 py-2 bg-casal text-white rounded-md hover:bg-gothic transition-colors"
                         >
                             View All Publications
                         </Link>
@@ -245,7 +248,7 @@ const Research = () => {
 
             {/* Current Projects Highlight */}
             <div>
-                <h2 className="text-2xl font-semibold text-casal mb-6">
+                <h2 className="text-2xl font-semibold text-firefly mb-6">
                     Featured Projects
                 </h2>
 
@@ -253,18 +256,18 @@ const Research = () => {
                     {projects.slice(0, 3).map((project, index) => (
                         <Card
                             key={index}
-                            className="overflow-hidden hover:shadow-xl transition-shadow duration-200"
+                            className="overflow-hidden hover:shadow-xl transition-all duration-300 border border-iron/10 h-full flex flex-col"
                         >
                             {project.image ? (
-                                <div className="w-full">
+                                <div className="w-full h-48 overflow-hidden">
                                     <img
                                         src={project.image}
                                         alt={project.title}
-                                        className="w-full h-48 object-cover"
+                                        className="w-full h-full object-cover transform hover:scale-105 transition-transform duration-500"
                                     />
                                 </div>
                             ) : (
-                                <div className="w-full h-48 bg-iron/20 flex items-center justify-center">
+                                <div className="w-full h-48 bg-gradient-to-r from-casal/20 to-firefly/20 flex items-center justify-center">
                                     <svg
                                         className="h-16 w-16 text-iron/30"
                                         fill="none"
@@ -280,13 +283,13 @@ const Research = () => {
                                     </svg>
                                 </div>
                             )}
-                            <div className="p-6">
+                            <div className="p-6 flex-grow flex flex-col">
                                 <div className="flex justify-between items-center mb-3">
                                     <Badge
-                                        className={
+                                        type={
                                             project.status === "Completed"
-                                                ? "bg-green-100 text-green-800"
-                                                : "bg-blue-100 text-blue-800"
+                                                ? "success"
+                                                : "default"
                                         }
                                     >
                                         {project.status || "Ongoing"}
@@ -302,11 +305,11 @@ const Research = () => {
                                     </span>
                                 </div>
 
-                                <h3 className="text-xl font-semibold text-gothic mb-3">
+                                <h3 className="text-xl font-semibold text-firefly mb-3">
                                     {project.title}
                                 </h3>
 
-                                <p className="text-nevada mb-4">
+                                <p className="text-nevada mb-4 flex-grow">
                                     {project.description &&
                                     project.description.length > 120
                                         ? `${project.description.substring(
@@ -316,14 +319,25 @@ const Research = () => {
                                         : project.description}
                                 </p>
 
-                                <div className="flex justify-between items-center">
+                                <div className="flex justify-between items-center mt-auto pt-3">
                                     <Link
-                                        to={`/projects/${
-                                            project.doc_id || index
-                                        }`}
-                                        className="text-casal hover:text-gothic transition-colors"
+                                        to={`/projects`}
+                                        className="text-casal hover:text-gothic transition-colors inline-flex items-center"
                                     >
-                                        Learn more →
+                                        Learn more
+                                        <svg
+                                            className="w-4 h-4 ml-1"
+                                            fill="none"
+                                            stroke="currentColor"
+                                            viewBox="0 0 24 24"
+                                        >
+                                            <path
+                                                strokeLinecap="round"
+                                                strokeLinejoin="round"
+                                                strokeWidth="2"
+                                                d="M14 5l7 7m0 0l-7 7m7-7H3"
+                                            ></path>
+                                        </svg>
                                     </Link>
 
                                     {project.github_link && (
@@ -331,7 +345,7 @@ const Research = () => {
                                             href={project.github_link}
                                             target="_blank"
                                             rel="noopener noreferrer"
-                                            className="text-gray-500 hover:text-gray-700"
+                                            className="text-firefly hover:text-casal transition-colors"
                                         >
                                             <svg
                                                 className="h-5 w-5"
@@ -351,7 +365,7 @@ const Research = () => {
                 <div className="mt-8 text-center">
                     <Link
                         to="/projects"
-                        className="inline-block px-5 py-2 border border-casal text-casal hover:bg-gray-300 hover:text-black rounded-md transition-colors"
+                        className="inline-block px-5 py-2 bg-casal text-white rounded-md hover:bg-gothic transition-colors"
                     >
                         View All Projects
                     </Link>

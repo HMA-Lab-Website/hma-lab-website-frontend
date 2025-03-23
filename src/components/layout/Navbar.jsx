@@ -7,23 +7,18 @@ import { api } from "../../utils/api";
 const Navbar = () => {
     const [isScrolled, setIsScrolled] = useState(false);
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-    // GPU Status State - simplified
     const [gpuStatus, setGpuStatus] = useState({
         isAvailable: true,
     });
-
-    // Lab status state
     const [labStatus, setLabStatus] = useState({
         isOpen: true,
     });
-
     const [expanded, setExpanded] = useState({});
+    const location = useLocation();
 
     const toggleSubmenu = (itemName) => {
         setExpanded((prev) => ({ ...prev, [itemName]: !prev[itemName] }));
     };
-
-    const location = useLocation();
 
     // Fetch statuses on component mount
     useEffect(() => {
@@ -61,17 +56,13 @@ const Navbar = () => {
         };
 
         fetchStatuses();
-
-        // Refresh status every 5 minutes
         const interval = setInterval(fetchStatuses, 5 * 60 * 1000);
         return () => clearInterval(interval);
     }, []);
 
     // Set initial scroll state and add scroll effect
     useEffect(() => {
-        // Check initial scroll position
         setIsScrolled(window.scrollY > 10);
-
         const handleScroll = () => {
             setIsScrolled(window.scrollY > 10);
         };
@@ -80,10 +71,7 @@ const Navbar = () => {
     }, []);
 
     const navItems = [
-        {
-            name: "Home",
-            path: "/",
-        },
+        { name: "Home", path: "/" },
         {
             name: "Research",
             path: "/research",
@@ -93,10 +81,7 @@ const Navbar = () => {
                 { name: "Datasets", path: "/datasets" },
             ],
         },
-        {
-            name: "Careers",
-            path: "/careers",
-        },
+        { name: "Careers", path: "/careers" },
         {
             name: "People",
             path: "/people",
@@ -112,7 +97,7 @@ const Navbar = () => {
     return (
         <nav
             className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-                isScrolled ? "bg-white shadow-lg" : "bg-white bg-opacity-95"
+                isScrolled ? "bg-white shadow-md" : "bg-white bg-opacity-95"
             }`}
         >
             <div className="max-w-7xl mx-auto px-4">
@@ -124,13 +109,9 @@ const Navbar = () => {
                             alt="Lab Logo"
                             className="h-10 w-auto transition-transform duration-300 group-hover:scale-105"
                         />
-                        <div
-                            className={`${
-                                isScrolled ? "text-black" : "text-black"
-                            }`}
-                        >
+                        <div className="text-firefly">
                             <div className="font-semibold text-lg">HMA Lab</div>
-                            <div className="text-xs opacity-80">
+                            <div className="text-xs text-nevada">
                                 Indian Institute of Information Technology
                             </div>
                         </div>
@@ -142,30 +123,16 @@ const Navbar = () => {
                             <div key={item.name} className="relative group">
                                 <Link
                                     to={item.path}
-                                    className={`px-3 py-2 text-sm font-medium 
-                                    transition-all duration-200 relative
+                                    className={`px-3 py-2 text-sm font-medium transition-all duration-200 relative
                                     ${
                                         location.pathname === item.path
-                                            ? isScrolled
-                                                ? "text-firefly"
-                                                : "text-black font-bold"
-                                            : isScrolled
-                                            ? "text-nevada"
-                                            : "text-iron"
-                                    }
-                                    ${
-                                        isScrolled
-                                            ? "group-hover:text-firefly"
-                                            : "group-hover:text-black"
+                                            ? "text-casal font-bold"
+                                            : "text-nevada hover:text-firefly"
                                     }`}
                                 >
                                     {item.name}
                                     <motion.div
-                                        className={`absolute bottom-0 left-0 right-0 h-0.5 ${
-                                            isScrolled
-                                                ? "bg-gray-300"
-                                                : "bg-white"
-                                        }`}
+                                        className="absolute bottom-0 left-0 right-0 h-0.5 bg-casal"
                                         initial={{ scaleX: 0 }}
                                         whileHover={{ scaleX: 1 }}
                                         transition={{
@@ -180,16 +147,20 @@ const Navbar = () => {
                                         className="absolute left-0 mt-1 w-48 opacity-0 invisible 
                                                 group-hover:opacity-100 group-hover:visible 
                                                 transition-all duration-200 transform translate-y-2 
-                                                group-hover:translate-y-0 bg-white shadow-xl
-                                                rounded-lg border border-iron/10 z-50"
+                                                group-hover:translate-y-0 bg-white shadow-lg
+                                                rounded-lg border border-iron/20 z-50"
                                     >
                                         {item.submenu.map((subItem) => (
                                             <Link
                                                 key={subItem.name}
                                                 to={subItem.path}
-                                                className="block px-4 py-2 text-sm text-nevada
-                                                       hover:text-firefly hover:bg-iron/10
-                                                       transition-colors duration-200"
+                                                className={`block px-4 py-2 text-sm transition-colors duration-200
+                                                    ${
+                                                        location.pathname ===
+                                                        subItem.path
+                                                            ? "text-casal bg-casal/5"
+                                                            : "text-nevada hover:text-firefly hover:bg-iron/10"
+                                                    }`}
                                             >
                                                 {subItem.name}
                                             </Link>
@@ -200,17 +171,17 @@ const Navbar = () => {
                         ))}
 
                         {/* Status Indicators */}
-                        <div className="flex flex-col space-y-0">
+                        <div className="flex flex-col space-y-1">
                             {/* Lab Status */}
-                            <div className="flex items-center bg-san-juan/30 px-3 py-1 backdrop-blur-sm rounded-md w-full">
+                            <div className="flex items-center bg-background rounded-md px-3 py-1 border border-iron/20">
                                 <div
-                                    className={`h-2 w-2 rounded-full ${
+                                    className={`h-2 w-2 rounded-full mr-2 animate-pulse ${
                                         labStatus.isOpen
-                                            ? "bg-green-400 shadow-lg shadow-green-400/20"
-                                            : "bg-red-400 shadow-lg shadow-red-400/20"
-                                    } mr-2 animate-pulse`}
+                                            ? "bg-green-500"
+                                            : "bg-red-500"
+                                    }`}
                                 ></div>
-                                <span className="text-black text-xs font-medium">
+                                <span className="text-firefly text-xs font-medium">
                                     {labStatus.isOpen
                                         ? "Lab Open"
                                         : "Lab Closed"}
@@ -218,15 +189,15 @@ const Navbar = () => {
                             </div>
 
                             {/* GPU Status */}
-                            <div className="flex items-center bg-san-juan/30 px-3 py-1 backdrop-blur-sm rounded-md w-full">
+                            <div className="flex items-center bg-background rounded-md px-3 py-1 border border-iron/20">
                                 <div
-                                    className={`h-2 w-2 rounded-full ${
+                                    className={`h-2 w-2 rounded-full mr-2 animate-pulse ${
                                         gpuStatus.isAvailable
-                                            ? "bg-green-400 shadow-lg shadow-green-400/20"
-                                            : "bg-red-400 shadow-lg shadow-red-400/20"
-                                    } mr-2 animate-pulse`}
+                                            ? "bg-green-500"
+                                            : "bg-red-500"
+                                    }`}
                                 ></div>
-                                <span className="text-black text-xs font-medium">
+                                <span className="text-firefly text-xs font-medium">
                                     {gpuStatus.isAvailable
                                         ? "GPUs Available"
                                         : "GPUs Busy"}
@@ -238,11 +209,7 @@ const Navbar = () => {
                     {/* Mobile Menu Button */}
                     <button
                         onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-                        className={`lg:hidden ${
-                            isScrolled ? "text-firefly" : "text-black"
-                        } 
-                                transition-colors duration-200 p-2 rounded-lg 
-                                hover:bg-san-juan/20`}
+                        className="lg:hidden text-firefly p-2 rounded-lg hover:bg-background"
                     >
                         <svg
                             className="h-6 w-6"
@@ -268,32 +235,32 @@ const Navbar = () => {
             {/* Mobile Menu */}
             {isMobileMenuOpen && (
                 <div className="lg:hidden">
-                    <div className="px-4 pt-2 pb-3 bg-white shadow-lg border-t border-iron/10">
+                    <div className="px-4 pt-2 pb-3 bg-white shadow-lg border-t border-iron/20">
                         {/* Status indicators for mobile */}
-                        <div className="flex justify-between my-2 pb-2 border-b border-iron/10">
-                            <div className="flex items-center">
+                        <div className="flex justify-between my-3 pb-3 border-b border-iron/20">
+                            <div className="flex items-center bg-background px-3 py-1 rounded-md border border-iron/20">
                                 <div
-                                    className={`h-2 w-2 rounded-full ${
+                                    className={`h-2 w-2 rounded-full mr-2 animate-pulse ${
                                         labStatus.isOpen
-                                            ? "bg-green-400"
-                                            : "bg-red-400"
-                                    } mr-2 animate-pulse`}
+                                            ? "bg-green-500"
+                                            : "bg-red-500"
+                                    }`}
                                 ></div>
-                                <span className="text-sm text-nevada">
+                                <span className="text-sm text-firefly">
                                     {labStatus.isOpen
                                         ? "Lab Open"
                                         : "Lab Closed"}
                                 </span>
                             </div>
-                            <div className="flex items-center">
+                            <div className="flex items-center bg-background px-3 py-1 rounded-md border border-iron/20">
                                 <div
-                                    className={`h-2 w-2 rounded-full ${
+                                    className={`h-2 w-2 rounded-full mr-2 animate-pulse ${
                                         gpuStatus.isAvailable
-                                            ? "bg-green-400"
-                                            : "bg-red-400"
-                                    } mr-2 animate-pulse`}
+                                            ? "bg-green-500"
+                                            : "bg-red-500"
+                                    }`}
                                 ></div>
-                                <span className="text-sm text-nevada">
+                                <span className="text-sm text-firefly">
                                     {gpuStatus.isAvailable
                                         ? "GPUs Available"
                                         : "GPUs Busy"}
@@ -304,17 +271,20 @@ const Navbar = () => {
                         {navItems.map((item) => (
                             <div
                                 key={item.name}
-                                className="border-b border-iron/10"
+                                className="border-b border-iron/20"
                             >
                                 <div className="flex justify-between items-center">
                                     <Link
                                         to={item.path}
                                         onClick={() => {
-                                            // if no submenu, close the menu
                                             if (!item.submenu)
                                                 setIsMobileMenuOpen(false);
                                         }}
-                                        className="block px-3 py-4 text-lg text-nevada hover:text-firefly transition-colors"
+                                        className={`block px-3 py-4 text-base font-medium transition-colors ${
+                                            location.pathname === item.path
+                                                ? "text-casal"
+                                                : "text-firefly hover:text-casal"
+                                        }`}
                                     >
                                         {item.name}
                                     </Link>
@@ -323,10 +293,10 @@ const Navbar = () => {
                                             onClick={() =>
                                                 toggleSubmenu(item.name)
                                             }
-                                            className="p-3 focus:outline-none"
+                                            className="p-3 text-nevada hover:text-casal focus:outline-none"
                                         >
                                             <motion.svg
-                                                className="h-4 w-4 text-nevada"
+                                                className="h-4 w-4"
                                                 initial={{ rotate: 0 }}
                                                 animate={{
                                                     rotate: expanded[item.name]
@@ -353,7 +323,7 @@ const Navbar = () => {
                                     )}
                                 </div>
                                 {item.submenu && expanded[item.name] && (
-                                    <div className="pl-6">
+                                    <div className="bg-background rounded-lg mb-2 mx-2">
                                         {item.submenu.map((subItem) => (
                                             <Link
                                                 key={subItem.name}
@@ -361,7 +331,12 @@ const Navbar = () => {
                                                 onClick={() =>
                                                     setIsMobileMenuOpen(false)
                                                 }
-                                                className="block px-3 py-2 text-base text-nevada hover:text-firefly transition-colors"
+                                                className={`block px-4 py-2 text-sm transition-colors ${
+                                                    location.pathname ===
+                                                    subItem.path
+                                                        ? "text-casal font-medium"
+                                                        : "text-nevada hover:text-firefly"
+                                                }`}
                                             >
                                                 {subItem.name}
                                             </Link>
