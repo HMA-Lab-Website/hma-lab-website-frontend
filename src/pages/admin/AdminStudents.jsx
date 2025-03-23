@@ -32,30 +32,17 @@ const AdminStudents = () => {
     ];
 
     const formFields = [
-        { id: "name", label: "Full Name", required: true, maxLength: 100 },
-        {
-            id: "role",
-            label: "Role",
-            required: true,
-            value: "Student",
-            maxLength: 50,
-        },
-        {
-            id: "email",
-            label: "Email Address",
-            required: true,
-            type: "email",
-            maxLength: 100,
-        },
+        { id: "name", label: "Full Name", required: true },
+        { id: "role", label: "Role", required: true, value: "Student" },
+        { id: "email", label: "Email Address", required: true, type: "email" },
         {
             id: "bio",
             label: "Biography",
             textarea: true,
             rows: 5,
             required: true,
-            maxLength: 500,
         },
-        { id: "linkedin", label: "LinkedIn Profile URL", maxLength: 250 },
+        { id: "linkedin", label: "LinkedIn Profile URL" },
         { id: "image", label: "Profile Picture", type: "file" },
     ];
 

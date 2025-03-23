@@ -11,7 +11,7 @@ const Footer = () => {
                             className="h-12 w-auto"
                         />
                         <p className="text-sm leading-relaxed opacity-80">
-                            Human Machine Analysis Lab at IIIT Sri City is
+                            Human Movement Analysis Lab at IIIT Sri City is
                             dedicated to advancing the frontiers of artificial
                             intelligence and machine learning research.
                         </p>
@@ -123,7 +123,7 @@ const Footer = () => {
                 {/* Bottom Bar */}
                 <div className="border-t border-san-juan/30 mt-12 pt-8 flex flex-col md:flex-row justify-between items-center">
                     <p className="text-sm opacity-80">
-                        © 2025 Human Machine Analysis Lab. All rights reserved.
+                        © 2025 Human Movement Analysis Lab. All rights reserved.
                     </p>
                     <div className="flex space-x-6 mt-4 md:mt-0">
                         <a

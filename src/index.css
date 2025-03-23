@@ -1,1 +1,64 @@
 @import "tailwindcss";
+
+.flip-card {
+    perspective: 1000px;
+    background-color: transparent;
+}
+
+.flip-card-inner {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    text-align: left;
+    transition: transform 0.8s;
+    transform-style: preserve-3d;
+}
+
+.flip-card:hover .flip-card-inner {
+    transform: rotateY(180deg);
+}
+
+.flip-card-front,
+.flip-card-back {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+}
+
+.flip-card-back {
+    transform: rotateY(180deg);
+}
+
+.alumni-flip-card {
+    perspective: 1000px;
+    height: 450px;
+    margin-bottom: 2rem;
+}
+
+.alumni-flip-card:hover .alumni-flip-front {
+    transform: rotateY(180deg);
+}
+
+.alumni-flip-card:hover .alumni-flip-back {
+    transform: rotateY(0);
+}
+
+.alumni-flip-front,
+.alumni-flip-back {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+    transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.alumni-flip-front {
+    transform: rotateY(0);
+}
+
+.alumni-flip-back {
+    transform: rotateY(-180deg);
+}
