@@ -34,26 +34,20 @@ const AdminAlumni = () => {
     ];
 
     const formFields = [
-        { id: "name", label: "Full Name", required: true },
-        { id: "batch", label: "Graduation Batch", required: true },
-        {
-            id: "contributions",
-            label: "Key Contributions to the Lab",
+        { id: "name", label: "Full Name", required: true, maxLength: 100 },
+        { id: "batch", label: "Graduation Batch", required: true, maxLength: 20 },
+        { 
+            id: "contributions", 
+            label: "Key Contributions to the Lab", 
             textarea: true,
             rows: 3,
             required: true,
+            maxLength: 300
         },
-        {
-            id: "current_position",
-            label: "Current Job Title and Company",
-            required: true,
-        },
+        { id: "current_position", label: "Current Job Title and Company", required: true, maxLength: 150 },
         { id: "image", label: "Profile Picture", type: "file" },
-        { id: "linkedin", label: "LinkedIn Profile" },
-        {
-            id: "Current_Location", // Capital C to match the schema
-            label: "Google Maps Embed Link",
-        },
+        { id: "linkedin", label: "LinkedIn Profile", maxLength: 250 },
+        { id: "Current_Location", label: "Google Maps Embed Link", maxLength: 500 }
     ];
 
     // Custom handler for delete operation to ensure we use the correct doc_id field

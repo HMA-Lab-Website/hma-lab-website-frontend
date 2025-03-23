@@ -6,7 +6,8 @@ const Layout = ({ children }) => {
     return (
         <div className="min-h-screen flex flex-col bg-background">
             <Navbar className="z-50 " />
-            <main className="flex-grow mt-6">{children}</main>
+            {/* Add pt-24 to push content below navbar */}
+            <main className="flex-grow pt-24">{children}</main>
             <Footer />
         </div>
     );

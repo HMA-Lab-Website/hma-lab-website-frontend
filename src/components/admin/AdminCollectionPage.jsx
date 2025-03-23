@@ -5,6 +5,53 @@ import { Button } from "../../components/common";
 import { useAuth } from "../../context/AuthContext";
 import { useNavigate } from "react-router-dom";
 
+const renderField = (field, formData, handleInputChange) => {
+    if (field.type === "select") {
+        return (
+            <div key={field.id} className="mb-4">
+                <label
+                    htmlFor={field.id}
+                    className="block text-sm font-medium text-nevada mb-1"
+                >
+                    {field.label}{" "}
+                    {field.required && <span className="text-red-500">*</span>}
+                </label>
+                <select
+                    id={field.id}
+                    name={field.id}
+                    value={formData[field.id] || ""}
+                    onChange={handleInputChange}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-casal focus:border-casal"
+                    required={field.required}
+                >
+                    {field.options.map((option) => (
+                        <option key={option} value={option}>
+                            {option}
+                        </option>
+                    ))}
+                </select>
+            </div>
+        );
+    }
+
+    return (
+        <FormField
+            key={field.id}
+            id={field.id}
+            label={field.label}
+            type={field.type || "text"}
+            value={formData[field.id] || ""}
+            onChange={handleInputChange}
+            placeholder={field.placeholder || ""}
+            required={field.required}
+            textarea={field.textarea}
+            rows={field.rows}
+            error=""
+            maxLength={field.maxLength}
+        />
+    );
+};
+
 export const AdminCollectionPage = ({
     title,
     collection,
