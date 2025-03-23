@@ -36,7 +36,7 @@ const Home = () => {
                         </div>
                         <div className="md:w-1/2 mt-8 md:mt-0 md:pl-8">
                             <img
-                                src="https://images.stockcake.com/public/c/b/6/cb6c2bd9-7d40-49d0-9e35-ec51818e2e30_medium/futuristic-laboratory-analysis-stockcake.jpg"
+                                src="https://ugc.futurelearn.com/uploads/images/65/aa/large_hero_65aa1ac9-6426-4cc9-b7ac-0699ebd771d6.JPG"
                                 alt="Lab Research"
                                 className="rounded-lg shadow-xl w-full h-[400px] object-cover object-center"
                             />

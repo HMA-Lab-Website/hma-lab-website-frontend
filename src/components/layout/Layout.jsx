@@ -1,11 +1,13 @@
+import React from "react";
 import Navbar from "./Navbar";
 import Footer from "./Footer";
 
 const Layout = ({ children }) => {
     return (
         <div className="min-h-screen flex flex-col bg-background">
-            <Navbar />
-            <main className="flex-grow mt-6">{children}</main>
+            <Navbar className="z-50 " />
+            {/* Add pt-24 to push content below navbar */}
+            <main className="flex-grow pt-22">{children}</main>
             <Footer />
         </div>
     );
