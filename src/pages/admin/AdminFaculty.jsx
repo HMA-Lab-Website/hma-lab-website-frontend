@@ -48,7 +48,7 @@ const AdminFaculty = () => {
             textarea: true,
             rows: 5,
             required: true,
-            maxLength: 250,
+            maxLength: 2000,
         },
         { id: "linkedin", label: "LinkedIn Profile URL", maxLength: 250 },
         { id: "image", label: "Profile Picture", type: "file" },

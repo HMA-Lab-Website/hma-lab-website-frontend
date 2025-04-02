@@ -47,7 +47,7 @@ const AdminAlumni = () => {
             textarea: true,
             rows: 3,
             required: true,
-            maxLength: 300,
+            maxLength: 500,
         },
         {
             id: "current_position",
