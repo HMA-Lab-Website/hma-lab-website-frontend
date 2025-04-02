@@ -12,14 +12,31 @@ export const FormField = ({
     rows = 3,
     error = "",
     maxLength,
+    maxWords,
 }) => {
-    // Calculate current character count and percentage
+    // Calculate current character or word count and percentage
     const charCount = value?.length || 0;
-    const showCounter =
-        maxLength && (type === "text" || textarea || type === "email");
-    const percentage = maxLength
-        ? Math.min((charCount / maxLength) * 100, 100)
+    const wordCount = value
+        ? value.trim().split(/\s+/).filter(Boolean).length
         : 0;
+
+    const showCounter =
+        (maxLength || maxWords) &&
+        (type === "text" || textarea || type === "email");
+
+    let percentage, counterDisplay, counterMax, countLabel;
+
+    if (maxWords) {
+        percentage = Math.min((wordCount / maxWords) * 100, 100);
+        counterDisplay = wordCount;
+        counterMax = maxWords;
+        countLabel = "words";
+    } else if (maxLength) {
+        percentage = Math.min((charCount / maxLength) * 100, 100);
+        counterDisplay = charCount;
+        counterMax = maxLength;
+        countLabel = "chars";
+    }
 
     // Determine counter color based on percentage
     let counterColor = "text-gray-500";
@@ -37,11 +54,10 @@ export const FormField = ({
         <div className="mb-4">
             <label
                 htmlFor={id}
-                className="block text-sm font-medium text-gray-700 mb-1"
+                className="block text-sm font-medium text-nevada mb-1"
             >
                 {label} {required && <span className="text-red-500">*</span>}
             </label>
-
             {textarea ? (
                 <div className="relative">
                     <textarea
@@ -49,11 +65,10 @@ export const FormField = ({
                         name={id}
                         value={value}
                         onChange={onChange}
-                        placeholder={placeholder}
                         rows={rows}
-                        maxLength={maxLength}
+                        placeholder={placeholder}
                         required={required}
-                        className={`w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-casal/50 
+                        className={`w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-casal/50
                                   ${
                                       error
                                           ? "border-red-300"
@@ -72,7 +87,7 @@ export const FormField = ({
                                 </div>
                             </div>
                             <div className={`ml-2 ${counterColor}`}>
-                                {charCount}/{maxLength}
+                                {counterDisplay}/{counterMax} {countLabel}
                             </div>
                         </div>
                     )}
@@ -117,7 +132,7 @@ export const FormField = ({
                                 </div>
                             </div>
                             <div className={`ml-2 ${counterColor}`}>
-                                {charCount}/{maxLength}
+                                {counterDisplay}/{counterMax} {countLabel}
                             </div>
                         </div>
                     )}

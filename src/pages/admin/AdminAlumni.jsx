@@ -47,20 +47,20 @@ const AdminAlumni = () => {
             textarea: true,
             rows: 3,
             required: true,
-            maxLength: 500,
+            maxWords: 500,
         },
         {
             id: "current_position",
             label: "Current Job Title and Company",
             required: true,
-            maxLength: 150,
+            maxWords: 150,
         },
         { id: "image", label: "Profile Picture", type: "file" },
         { id: "linkedin", label: "LinkedIn Profile", maxLength: 250 },
         {
             id: "current_location", // Fixed: Changed from "Current_Location"
             label: "Current Location",
-            maxLength: 500,
+            maxWords: 500,
         },
     ];
 

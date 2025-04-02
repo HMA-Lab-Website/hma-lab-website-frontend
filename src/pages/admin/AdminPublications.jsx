@@ -86,7 +86,7 @@ const AdminPublications = () => {
             label: "Abstract",
             textarea: true,
             rows: 5,
-            maxLength: 2000,
+            maxWords: 250,
         },
     ];
 

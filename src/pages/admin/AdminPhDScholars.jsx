@@ -48,7 +48,7 @@ const AdminPhDScholars = () => {
             textarea: true,
             rows: 5,
             required: true,
-            maxLength: 2000,
+            maxWords: 250,
         },
         { id: "linkedin", label: "LinkedIn Profile URL", maxLength: 250 },
         { id: "image", label: "Profile Picture", type: "file" },

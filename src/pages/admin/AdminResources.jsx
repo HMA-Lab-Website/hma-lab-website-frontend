@@ -51,7 +51,7 @@ const AdminResources = () => {
             textarea: true,
             rows: 4,
             required: true,
-            maxLength: 2000,
+            maxWords: 250,
         },
         { id: "link", label: "Resource Link", required: true, maxLength: 250 },
         {

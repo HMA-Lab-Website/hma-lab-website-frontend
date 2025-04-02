@@ -43,7 +43,7 @@ const AdminProjects = () => {
             textarea: true,
             rows: 4,
             required: true,
-            maxLength: 500,
+            maxWords: 500,
         },
         {
             id: "start_date",

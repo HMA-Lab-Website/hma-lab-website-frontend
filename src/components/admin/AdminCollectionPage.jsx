@@ -48,6 +48,7 @@ const renderField = (field, formData, handleInputChange) => {
             rows={field.rows}
             error=""
             maxLength={field.maxLength}
+            maxWords={field.maxWords}
         />
     );
 };
@@ -337,6 +338,7 @@ export const AdminCollectionPage = ({
                                 rows={field.rows}
                                 error=""
                                 maxLength={field.maxLength}
+                                maxWords={field.maxWords}
                             />
                         ) : (
                             <FormField
@@ -352,6 +354,7 @@ export const AdminCollectionPage = ({
                                 rows={field.rows}
                                 error=""
                                 maxLength={field.maxLength} // Make sure this prop is passed
+                                maxWords={field.maxWords}
                             />
                         )
                     )}
