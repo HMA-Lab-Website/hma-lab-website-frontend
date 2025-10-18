@@ -7,7 +7,7 @@ const Careers = () => {
     const jobOpenings = [
         {
             id: 1,
-            title: "RA for Movement Translation",
+            title: "RA for Arts Research",
             description:
                 "Multiple openings for talented people who are passionate about machine translation, language studies, and pushing the boundaries of linguistics in India. If you have expertise in NLP, machine learning, or a strong command of regional languages mentioned in this posting, apply.",
             date: "Jan 3, 2024",
